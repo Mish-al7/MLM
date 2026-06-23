@@ -8,7 +8,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
     name: '',
     email: '',
     phone: '',
-    tezId: '',
+    allianzaId: '',
     managerId: '',
     role: 'member',
   });
@@ -36,7 +36,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
       if (res.ok) {
         onSuccess(json.data);
         onClose();
-        setFormData({ name: '', email: '', phone: '', tezId: '', managerId: '', role: 'member' });
+        setFormData({ name: '', email: '', phone: '', allianzaId: '', managerId: '', role: 'member' });
       } else {
         setError(json.error || 'Failed to add member.');
       }
@@ -107,11 +107,11 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">TEZ ID</label>
+              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Allianza ID</label>
               <input 
                 type="text" 
-                name="tezId"
-                value={formData.tezId}
+                name="allianzaId"
+                value={formData.allianzaId}
                 onChange={handleChange}
                 className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
                 placeholder="Optional external ID"

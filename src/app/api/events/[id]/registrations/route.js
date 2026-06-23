@@ -24,11 +24,11 @@ export async function GET(req, { params }) {
     // Enrich with user profiles
     const enrichedData = [];
     for (const reg of registrations) {
-      const user = await User.findOne({ userId: reg.userId }).select('name tezId phone rank leftBV rightBV');
+      const user = await User.findOne({ userId: reg.userId }).select('name allianzaId phone rank leftBV rightBV');
       enrichedData.push({
         _id: reg._id.toString(),
         userId: reg.userId,
-        tezId: user ? user.tezId : '',
+        allianzaId: user ? user.allianzaId : '',
         name: user ? user.name : 'Unknown',
         phone: user ? user.phone : reg.contactNumber,
         contactNumber: reg.contactNumber,
@@ -51,7 +51,7 @@ export async function GET(req, { params }) {
       const excelRows = enrichedData.map(item => ({
         'Member Name': item.name,
         'User ID': item.userId,
-        'TEZ ID': item.tezId,
+        'Allianza ID': item.allianzaId,
         'Phone Number': item.phone,
         'Leader': item.mainLeader,
         'Left BV': item.leftBV,
@@ -70,7 +70,7 @@ export async function GET(req, { params }) {
       const wscols = [
         { wch: 20 }, // Member Name
         { wch: 12 }, // User ID
-        { wch: 12 }, // TEZ ID
+        { wch: 12 }, // Allianza ID
         { wch: 15 }, // Phone Number
         { wch: 20 }, // Leader
         { wch: 10 }, // Left BV

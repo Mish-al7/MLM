@@ -5,7 +5,7 @@ import dbConnect from '@/lib/dbConnect';
 import User from '@/models/User';
 import Otp from '@/models/Otp';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'tez-leadership-platform-secret-12345';
+const JWT_SECRET = process.env.JWT_SECRET || 'allianza-leadership-platform-secret-12345';
 
 export async function POST(req) {
   try {
@@ -74,7 +74,7 @@ export async function POST(req) {
         phone: user.phone,
         role: user.role,
         status: user.status,
-        tezId: user.tezId,
+        allianzaId: user.allianzaId,
         managerId: user.managerId,
         avatar: user.avatar,
         leftBV: user.leftBV,

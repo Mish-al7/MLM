@@ -26,7 +26,7 @@ export default function MemberProfileClient({ currentUser }) {
         <div className="flex-1 space-y-6 w-full">
           <div>
             <h2 className="text-2xl font-bold text-white">{currentUser.name}</h2>
-            <p className="text-zinc-500 font-mono text-sm">{currentUser.userId} {currentUser.tezId && `| ${currentUser.tezId}`}</p>
+            <p className="text-zinc-500 font-mono text-sm">{currentUser.userId} {currentUser.allianzaId && `| ${currentUser.allianzaId}`}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

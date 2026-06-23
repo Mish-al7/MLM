@@ -12,7 +12,7 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: "TEZ International - Leadership Platform",
+  title: "Allianza - Leadership Platform",
   description: "Secure organization hierarchy and business metrics management platform.",
 };
 

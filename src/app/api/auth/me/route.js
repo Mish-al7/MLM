@@ -35,7 +35,7 @@ export async function GET() {
         phone: user.phone,
         role: user.role,
         status: user.status,
-        tezId: user.tezId,
+        allianzaId: user.allianzaId,
         managerId: user.managerId,
         managerName: user.managerName,
         avatar: user.avatar,

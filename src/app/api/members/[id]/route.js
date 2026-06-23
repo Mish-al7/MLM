@@ -11,7 +11,7 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = await params; // id represents the userId (e.g. TEZ-0001)
+    const { id } = await params; // id represents the userId (e.g. ALZ-0001)
 
     const user = await User.findOne({ userId: id }).lean();
     if (!user) {
@@ -60,7 +60,7 @@ export async function PATCH(req, { params }) {
     if (isAdmin) {
       // Super Admin edit flow (can edit anything)
       const {
-        name, email, phone, tezId, managerId, status, role,
+        name, email, phone, allianzaId, managerId, status, role,
         leftBV, rightBV, rank, reward, upcomingRank, upcomingReward,
         achievementDate, personalNotes
       } = body;
@@ -125,7 +125,7 @@ export async function PATCH(req, { params }) {
       // Standard fields updates
       if (name) targetUser.name = name;
       if (phone !== undefined) targetUser.phone = phone;
-      if (tezId !== undefined) targetUser.tezId = tezId;
+      if (allianzaId !== undefined) targetUser.allianzaId = allianzaId;
       if (status) targetUser.status = status;
       if (role) targetUser.role = role;
       if (upcomingRank !== undefined) targetUser.upcomingRank = upcomingRank;

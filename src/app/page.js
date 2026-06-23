@@ -125,7 +125,7 @@ export default function Home() {
       <div className="w-full max-w-md glass-panel p-8 rounded-2xl border border-zinc-800 relative z-10 bg-zinc-950/50 backdrop-blur-xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-extrabold tracking-tight text-white font-heading">
-            TEZ <span className="text-gold-gradient">INTERNATIONAL</span>
+            <span className="text-gold-gradient">ALLIANZA</span>
           </h1>
           <p className="text-sm text-zinc-400 mt-2">Leadership Organization Platform</p>
         </div>

@@ -188,7 +188,7 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
                 />
                 <div>
                   <h3 className="font-bold text-base text-white">{selectedMember.name}</h3>
-                  <p className="text-xs text-zinc-500">{selectedMember.userId} | {selectedMember.tezId || 'No TEZ ID'}</p>
+                  <p className="text-xs text-zinc-500">{selectedMember.userId} | {selectedMember.allianzaId || 'No Allianza ID'}</p>
                 </div>
               </div>
               <p className="text-sm text-zinc-400">Manage member details, ranks, and overrides here.</p>

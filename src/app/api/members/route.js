@@ -28,12 +28,12 @@ export async function GET(req) {
 
     let filter = {};
 
-    // Apply search query (Name, User ID, TEZ ID, Phone, Email)
+    // Apply search query (Name, User ID, Allianza ID, Phone, Email)
     if (query) {
       filter.$or = [
         { name: { $regex: query, $options: 'i' } },
         { userId: { $regex: query, $options: 'i' } },
-        { tezId: { $regex: query, $options: 'i' } },
+        { allianzaId: { $regex: query, $options: 'i' } },
         { phone: { $regex: query, $options: 'i' } },
         { email: { $regex: query, $options: 'i' } }
       ];
@@ -89,7 +89,7 @@ export async function POST(req) {
     }
 
     const body = await req.json();
-    const { name, email, phone, tezId, managerId, joiningDate, role, status } = body;
+    const { name, email, phone, allianzaId, managerId, joiningDate, role, status } = body;
 
     if (!name || !email) {
       return NextResponse.json({ error: 'Name and email are required' }, { status: 400 });
@@ -101,17 +101,17 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 });
     }
 
-    // Auto-generate User ID (e.g. TEZ-0001)
+    // Auto-generate User ID (e.g. ALZ-0001)
     const lastUser = await User.findOne().sort({ createdAt: -1 });
     let nextNum = 1;
-    if (lastUser && lastUser.userId.startsWith('TEZ-')) {
+    if (lastUser && lastUser.userId.startsWith('ALZ-')) {
       const parts = lastUser.userId.split('-');
       const num = parseInt(parts[1], 10);
       if (!isNaN(num)) {
         nextNum = num + 1;
       }
     }
-    const userId = `TEZ-${nextNum.toString().padStart(4, '0')}`;
+    const userId = `ALZ-${nextNum.toString().padStart(4, '0')}`;
 
     // Verify manager exists if specified
     if (managerId) {
@@ -126,7 +126,7 @@ export async function POST(req) {
       name,
       email: email.toLowerCase(),
       phone: phone || '',
-      tezId: tezId || '',
+      allianzaId: allianzaId || '',
       managerId: managerId || null,
       joiningDate: joiningDate ? new Date(joiningDate) : new Date(),
       role: role || 'member',

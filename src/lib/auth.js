@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'tez-leadership-platform-secret-12345';
+const JWT_SECRET = process.env.JWT_SECRET || 'allianza-leadership-platform-secret-12345';
 
 export async function getSessionUser() {
   try {

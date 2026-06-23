@@ -46,7 +46,7 @@ export default function Sidebar({ user }) {
       {/* Sidebar Header & Brand */}
       <div className="p-6 border-b border-zinc-900">
         <h2 className="text-xl font-bold tracking-tight text-white font-heading">
-          TEZ <span className="text-gold-gradient">INTERNATIONAL</span>
+          <span className="text-gold-gradient">ALLIANZA</span>
         </h2>
         <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Leadership Platform</p>
       </div>
