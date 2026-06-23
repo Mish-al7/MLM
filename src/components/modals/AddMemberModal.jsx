@@ -1,15 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, ShieldAlert } from 'lucide-react';
+import { X, ShieldAlert, Lock } from 'lucide-react';
 
-export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMembers }) {
+export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMembers, lockedManagerId }) {
+  const isLockedMode = !!lockedManagerId;
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     allianzaId: '',
-    managerId: '',
+    managerId: lockedManagerId || '',
     role: 'member',
   });
   const [loading, setLoading] = useState(false);
@@ -27,16 +29,20 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
     setError('');
 
     try {
+      const payload = isLockedMode
+        ? { name: formData.name, email: formData.email, phone: formData.phone, allianzaId: formData.allianzaId }
+        : formData;
+
       const res = await fetch('/api/members', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
       const json = await res.json();
       if (res.ok) {
         onSuccess(json.data);
         onClose();
-        setFormData({ name: '', email: '', phone: '', allianzaId: '', managerId: '', role: 'member' });
+        setFormData({ name: '', email: '', phone: '', allianzaId: '', managerId: lockedManagerId || '', role: 'member' });
       } else {
         setError(json.error || 'Failed to add member.');
       }
@@ -57,7 +63,14 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
           <X size={20} />
         </button>
 
-        <h2 className="text-xl font-bold text-white mb-6 font-heading">Add New Member</h2>
+        <h2 className="text-xl font-bold text-white mb-1 font-heading">Add New Member</h2>
+        {isLockedMode && (
+          <p className="text-xs text-amber-500/80 flex items-center gap-1.5 mb-5">
+            <Lock size={11} />
+            This member will be added directly under your team
+          </p>
+        )}
+        {!isLockedMode && <div className="mb-5" />}
 
         {error && (
           <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-start gap-2">
@@ -119,34 +132,37 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Reporting Manager</label>
-              <select 
-                name="managerId"
-                value={formData.managerId}
-                onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
-              >
-                <option value="">None (Root Node)</option>
-                {existingMembers.map(m => (
-                  <option key={m.userId} value={m.userId}>{m.name} ({m.userId})</option>
-                ))}
-              </select>
+          {/* Admin-only fields: manager picker + role selector */}
+          {!isLockedMode && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Reporting Manager</label>
+                <select 
+                  name="managerId"
+                  value={formData.managerId}
+                  onChange={handleChange}
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                >
+                  <option value="">None (Root Node)</option>
+                  {existingMembers.map(m => (
+                    <option key={m.userId} value={m.userId}>{m.name} ({m.userId})</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">System Role</label>
+                <select 
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                >
+                  <option value="member">Team Member</option>
+                  <option value="super_admin">Super Admin</option>
+                </select>
+              </div>
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">System Role</label>
-              <select 
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
-              >
-                <option value="member">Team Member</option>
-                <option value="super_admin">Super Admin</option>
-              </select>
-            </div>
-          </div>
+          )}
 
           <div className="pt-4 flex justify-end gap-3 border-t border-zinc-800 mt-6">
             <button 

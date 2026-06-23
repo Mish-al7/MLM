@@ -84,12 +84,18 @@ export async function POST(req) {
   try {
     await dbConnect();
     const currentUser = await getSessionUser();
-    if (!currentUser || currentUser.role !== 'super_admin') {
-      return NextResponse.json({ error: 'Forbidden: Admin access only' }, { status: 403 });
+    if (!currentUser) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const isAdmin = currentUser.role === 'super_admin';
     const body = await req.json();
-    const { name, email, phone, allianzaId, managerId, joiningDate, role, status } = body;
+    const { name, email, phone, allianzaId, joiningDate } = body;
+
+    // Members can only add under themselves; admins can pick any managerId/role/status
+    const managerId = isAdmin ? (body.managerId || null) : currentUser.userId;
+    const role = isAdmin ? (body.role || 'member') : 'member';
+    const status = isAdmin ? (body.status || 'active') : 'active';
 
     if (!name || !email) {
       return NextResponse.json({ error: 'Name and email are required' }, { status: 400 });
@@ -129,8 +135,8 @@ export async function POST(req) {
       allianzaId: allianzaId || '',
       managerId: managerId || null,
       joiningDate: joiningDate ? new Date(joiningDate) : new Date(),
-      role: role || 'member',
-      status: status || 'active'
+      role,
+      status
     });
 
     await newUser.save();

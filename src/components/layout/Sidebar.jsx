@@ -19,7 +19,7 @@ export default function Sidebar({ user }) {
 
   const menuItems = [
     { id: '', label: 'Dashboard', icon: <Layers size={18} />, adminOnly: false },
-    { id: 'team', label: 'Team Hierarchy', icon: <Users size={18} />, adminOnly: true },
+    { id: 'team', label: isAdmin ? 'Team Hierarchy' : 'My Team', icon: <Users size={18} />, adminOnly: false },
     { id: 'referrals', label: 'Referral Team', icon: <UserPlus size={18} />, adminOnly: true },
     { id: 'news', label: 'News Center', icon: <Volume2 size={18} />, adminOnly: false },
     { id: 'updates', label: 'Quick Announcements', icon: <Bell size={18} />, adminOnly: false },
