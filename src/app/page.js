@@ -117,28 +117,28 @@ export default function Home() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center min-h-screen relative overflow-hidden bg-[#070a13] px-4 font-sans">
+    <div className="flex-1 flex items-center justify-center min-h-screen relative overflow-hidden bg-coffee-brown px-4 py-8 font-sans">
       {/* Abstract Blur Accents */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px]" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[100px]" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-[100px]" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-[100px]" />
 
-      <div className="w-full max-w-md glass-panel p-8 rounded-2xl border border-zinc-800 relative z-10 bg-zinc-950/50 backdrop-blur-xl">
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl border border-zinc-200 relative z-10 shadow-2xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold tracking-tight text-white font-heading">
+          <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 font-heading">
             <span className="text-gold-gradient">ALLIANZA</span>
           </h1>
-          <p className="text-sm text-zinc-400 mt-2">Leadership Organization Platform</p>
+          <p className="text-sm text-zinc-500 mt-2">Leadership Organization Platform</p>
         </div>
 
         {authError && (
-          <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm flex items-center gap-2">
             <ShieldAlert size={16} />
             <span>{authError}</span>
           </div>
         )}
 
         {authSuccess && (
-          <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm">
+          <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">
             {authSuccess}
           </div>
         )}
@@ -146,18 +146,18 @@ export default function Home() {
         {!otpSent ? (
           <form onSubmit={handleRequestOtp} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Email Address</label>
+              <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Email Address</label>
               <input 
                 type="email" 
                 value={authEmail} 
                 onChange={(e) => setAuthEmail(e.target.value)}
                 placeholder="name@company.com" 
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 text-black focus:outline-none focus:border-blue-500 transition-colors"
               />
             </div>
             <button 
               type="submit" 
-              className="w-full bg-gold-gradient py-3 rounded-lg font-bold text-black hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+              className="w-full bg-gold-gradient py-3 rounded-lg font-bold text-white hover:opacity-90 transition-opacity flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-blue-500/20"
             >
               <span>Request OTP Code</span>
             </button>
@@ -165,24 +165,24 @@ export default function Home() {
         ) : (
           <form onSubmit={handleVerifyOtp} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">6-Digit Verification Code</label>
+              <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">6-Digit Verification Code</label>
               <input 
                 type="text" 
                 maxLength={6}
                 value={authOtp} 
                 onChange={(e) => setAuthOtp(e.target.value)}
                 placeholder="Enter 6-digit OTP" 
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-zinc-200 tracking-[0.3em] text-center font-mono text-xl focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 text-black tracking-[0.3em] text-center font-mono text-xl focus:outline-none focus:border-blue-500 transition-colors"
               />
             </div>
 
             {devOtp && (
-              <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-center">
-                <p className="text-xs text-zinc-400">Dev Testing OTP Helper</p>
+              <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg text-center">
+                <p className="text-xs text-zinc-500">Dev Testing OTP Helper</p>
                 <button 
                   type="button" 
                   onClick={() => setAuthOtp(devOtp)}
-                  className="mt-1 text-sm font-mono font-bold text-amber-500 underline"
+                  className="mt-1 text-sm font-mono font-bold text-blue-600 underline cursor-pointer"
                 >
                   Click to Auto-fill: {devOtp}
                 </button>
@@ -191,14 +191,14 @@ export default function Home() {
 
             <button 
               type="submit" 
-              className="w-full bg-gold-gradient py-3 rounded-lg font-bold text-black hover:opacity-90 transition-opacity"
+              className="w-full bg-gold-gradient py-3 rounded-lg font-bold text-white hover:opacity-90 transition-opacity cursor-pointer shadow-md shadow-blue-500/20"
             >
               Verify & Login
             </button>
             <button 
               type="button" 
               onClick={() => setOtpSent(false)} 
-              className="w-full text-center text-xs text-zinc-500 hover:text-zinc-300 transition-colors underline"
+              className="w-full text-center text-xs text-zinc-500 hover:text-zinc-700 transition-colors underline cursor-pointer"
             >
               Request another code
             </button>
@@ -206,13 +206,13 @@ export default function Home() {
         )}
 
         {/* Quick Demo Switcher Section */}
-        <div className="mt-8 pt-6 border-t border-zinc-800/80">
-          <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider text-center mb-4">Quick Testing Personas</h3>
+        <div className="mt-8 pt-6 border-t border-zinc-100">
+          <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider text-center mb-4">Quick Testing Personas</h3>
           <div className="grid grid-cols-2 gap-3">
             <button 
               onClick={() => handleDemoLogin('super_admin')}
               disabled={demoRoleLoading}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 text-amber-400 font-semibold text-xs transition-colors"
+              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold text-xs transition-colors cursor-pointer"
             >
               <ShieldAlert size={14} />
               <span>Super Admin</span>
@@ -220,7 +220,7 @@ export default function Home() {
             <button 
               onClick={() => handleDemoLogin('member')}
               disabled={demoRoleLoading}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 text-zinc-300 font-semibold text-xs transition-colors"
+              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 font-semibold text-xs transition-colors cursor-pointer"
             >
               <Users size={14} />
               <span>Team Member</span>
@@ -231,11 +231,11 @@ export default function Home() {
             <button 
               onClick={handleSeed}
               disabled={loading}
-              className="text-[11px] text-zinc-500 hover:text-amber-400 transition-colors underline disabled:opacity-50"
+              className="text-[11px] text-zinc-400 hover:text-blue-600 transition-colors underline disabled:opacity-50 cursor-pointer"
             >
               Seed Initial Demo Database Tree (Ranks, Users, Events)
             </button>
-            {seedMessage && <p className="mt-2 text-xs text-amber-400/80 font-medium">{seedMessage}</p>}
+            {seedMessage && <p className="mt-2 text-xs text-blue-600 font-medium">{seedMessage}</p>}
           </div>
         </div>
       </div>

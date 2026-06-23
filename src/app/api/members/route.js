@@ -90,15 +90,15 @@ export async function POST(req) {
 
     const isAdmin = currentUser.role === 'super_admin';
     const body = await req.json();
-    const { name, email, phone, allianzaId, joiningDate } = body;
+    const { name, email, dob, phone, allianzaId, joiningDate } = body;
 
     // Members can only add under themselves; admins can pick any managerId/role/status
     const managerId = isAdmin ? (body.managerId || null) : currentUser.userId;
     const role = isAdmin ? (body.role || 'member') : 'member';
     const status = isAdmin ? (body.status || 'active') : 'active';
 
-    if (!name || !email) {
-      return NextResponse.json({ error: 'Name and email are required' }, { status: 400 });
+    if (!name || !email || !dob || !allianzaId) {
+      return NextResponse.json({ error: 'Name, email, date of birth (DOB), and Allianza ID are required' }, { status: 400 });
     }
 
     // Check if email already registered
@@ -131,6 +131,7 @@ export async function POST(req) {
       userId,
       name,
       email: email.toLowerCase(),
+      dob: new Date(dob),
       phone: phone || '',
       allianzaId: allianzaId || '',
       managerId: managerId || null,

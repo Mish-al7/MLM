@@ -22,6 +22,7 @@ const UserSchema = new mongoose.Schema({
   userId: { type: String, unique: true, required: true }, // e.g. ALZ-0001
   name: { type: String, required: true },
   email: { type: String, unique: true, required: true },
+  dob: { type: Date, required: true },
   phone: { type: String, default: '' },
   role: { type: String, enum: ['super_admin', 'member'], default: 'member' },
   status: { type: String, enum: ['active', 'inactive', 'archived'], default: 'active' },

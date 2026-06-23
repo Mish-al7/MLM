@@ -161,14 +161,14 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
               placeholder="Search member ID or name..."
               value={memberSearch}
               onChange={(e) => setMemberSearch(e.target.value)}
-              className="bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-4 py-2 text-sm text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors w-64"
+              className="bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-4 py-2 text-sm text-black focus:outline-none focus:border-amber-500 transition-colors w-64"
             />
           </div>
 
           <select
             value={memberSort}
             onChange={(e) => setMemberSort(e.target.value)}
-            className="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-300 focus:outline-none focus:border-amber-500"
+            className="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-black focus:outline-none focus:border-amber-500"
           >
             <option value="date">Sort by Join Date</option>
             <option value="bv">Sort by Business Value</option>

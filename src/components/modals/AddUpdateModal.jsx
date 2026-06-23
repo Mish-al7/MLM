@@ -72,7 +72,7 @@ export default function AddUpdateModal({ isOpen, onClose, onSuccess }) {
               value={formData.content}
               onChange={handleChange}
               rows={4}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               placeholder="What's the update?"
             />
           </div>
@@ -84,7 +84,7 @@ export default function AddUpdateModal({ isOpen, onClose, onSuccess }) {
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               >
                 <option value="Notice">Notice</option>
                 <option value="Reminder">Reminder</option>
@@ -99,7 +99,7 @@ export default function AddUpdateModal({ isOpen, onClose, onSuccess }) {
                 name="author"
                 value={formData.author}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               />
             </div>
           </div>

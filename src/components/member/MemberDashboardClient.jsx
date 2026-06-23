@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Award, TrendingUp, Edit2 } from 'lucide-react';
+import { Award, Edit2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function MemberDashboardClient({ initialUser }) {
@@ -41,7 +41,7 @@ export default function MemberDashboardClient({ initialUser }) {
           <span className="text-xs font-semibold text-amber-500 uppercase tracking-widest">
             Member Workspace
           </span>
-          <h1 className="text-3xl font-extrabold text-white mt-1 font-heading">
+          <h1 className="text-3xl font-extrabold text-zinc-100 mt-1 font-heading">
             Good evening, {user.name.split(' ')[0]}.
           </h1>
           <p className="text-zinc-400 text-sm mt-1">Your ranks. Your milestones. Your organization metrics at a glance.</p>
@@ -63,17 +63,20 @@ export default function MemberDashboardClient({ initialUser }) {
                   type="number" 
                   value={leftBV} 
                   onChange={(e) => setLeftBV(e.target.value)}
-                  className="mt-2 bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-white w-full font-mono text-xl"
+                  className="mt-2 bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-zinc-100 w-full font-mono text-xl"
                 />
               ) : (
-                <h3 className="text-4xl font-extrabold text-white mt-2 font-mono">
+                <h3 className="text-4xl font-extrabold text-zinc-100 mt-2 font-mono flex items-center gap-2">
                   {(user.leftBV || 0).toLocaleString()}
+                  <button 
+                    onClick={() => setEditMode(true)}
+                    className="p-1.5 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors cursor-pointer"
+                    title="Edit Left Business Value"
+                  >
+                    <Edit2 size={14} />
+                  </button>
                 </h3>
               )}
-              <p className="text-xs text-emerald-400 mt-2 flex items-center gap-1">
-                <TrendingUp size={14} />
-                <span>Editable by you</span>
-              </p>
             </div>
           </div>
         </div>
@@ -88,17 +91,20 @@ export default function MemberDashboardClient({ initialUser }) {
                   type="number" 
                   value={rightBV} 
                   onChange={(e) => setRightBV(e.target.value)}
-                  className="mt-2 bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-white w-full font-mono text-xl"
+                  className="mt-2 bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-zinc-100 w-full font-mono text-xl"
                 />
               ) : (
-                <h3 className="text-4xl font-extrabold text-white mt-2 font-mono">
+                <h3 className="text-4xl font-extrabold text-zinc-100 mt-2 font-mono flex items-center gap-2">
                   {(user.rightBV || 0).toLocaleString()}
+                  <button 
+                    onClick={() => setEditMode(true)}
+                    className="p-1.5 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors cursor-pointer"
+                    title="Edit Right Business Value"
+                  >
+                    <Edit2 size={14} />
+                  </button>
                 </h3>
               )}
-              <p className="text-xs text-emerald-400 mt-2 flex items-center gap-1">
-                <TrendingUp size={14} />
-                <span>Editable by you</span>
-              </p>
             </div>
           </div>
         </div>
@@ -108,7 +114,7 @@ export default function MemberDashboardClient({ initialUser }) {
           <div className="flex justify-between items-start mb-4">
             <div>
               <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">Current Rank Milestone</p>
-              <h3 className="text-2xl font-bold text-white mt-1">{user.rank || 'Associate'}</h3>
+              <h3 className="text-2xl font-bold text-zinc-100 mt-1">{user.rank || 'Associate'}</h3>
               <p className="text-xs text-amber-500 mt-1">Reward: {user.reward || 'None'}</p>
             </div>
             <div className="p-3 bg-zinc-900 rounded-lg text-amber-500">
@@ -122,15 +128,15 @@ export default function MemberDashboardClient({ initialUser }) {
       <div className="flex justify-end gap-4">
         {editMode ? (
           <>
-            <button onClick={() => setEditMode(false)} className="px-4 py-2 rounded-lg font-semibold text-sm text-zinc-400 hover:text-white transition-colors">
+            <button onClick={() => setEditMode(false)} className="px-4 py-2 rounded-lg font-semibold text-sm text-zinc-400 hover:text-zinc-100 transition-colors">
               Cancel
             </button>
-            <button onClick={handleUpdateSelfBv} className="px-4 py-2 rounded-lg font-bold text-sm bg-amber-500 text-black hover:opacity-90 transition-opacity">
+            <button onClick={handleUpdateSelfBv} className="px-4 py-2 rounded-lg font-bold text-sm bg-amber-500 text-zinc-100 hover:opacity-90 transition-opacity">
               Save Values
             </button>
           </>
         ) : (
-          <button onClick={() => setEditMode(true)} className="flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition-colors">
+          <button onClick={() => setEditMode(true)} className="flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-zinc-800 text-zinc-100 hover:bg-zinc-700 transition-colors">
             <Edit2 size={16} />
             Update Business Values
           </button>

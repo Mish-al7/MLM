@@ -74,7 +74,7 @@ export default function AddNewsModal({ isOpen, onClose, onSuccess }) {
               required
               value={formData.title}
               onChange={handleChange}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               placeholder="e.g. Q3 Organization Review"
             />
           </div>
@@ -87,7 +87,7 @@ export default function AddNewsModal({ isOpen, onClose, onSuccess }) {
               value={formData.content}
               onChange={handleChange}
               rows={5}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               placeholder="Write your news article here..."
             />
           </div>
@@ -100,7 +100,7 @@ export default function AddNewsModal({ isOpen, onClose, onSuccess }) {
                 name="author"
                 value={formData.author}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               />
             </div>
           </div>

@@ -24,11 +24,20 @@ export async function GET() {
     await Media.deleteMany({});
 
     // 2. Create Members Hierarchy
+    const localTimeStr = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+    const todayLocal = new Date(localTimeStr);
+    const tomorrowLocal = new Date(todayLocal);
+    tomorrowLocal.setDate(todayLocal.getDate() + 1);
+
+    const birthToday = new Date(Date.UTC(1990, todayLocal.getMonth(), todayLocal.getDate()));
+    const birthTomorrow = new Date(Date.UTC(1993, tomorrowLocal.getMonth(), tomorrowLocal.getDate()));
+
     // CEO (aravind)
     const aravind = new User({
       userId: 'ALZ-0001',
       name: 'Aravind Menon',
       email: 'aravind@allianza.team',
+      dob: new Date('1988-06-15'),
       phone: '+91 9800000001',
       role: 'super_admin',
       status: 'active',
@@ -50,6 +59,7 @@ export async function GET() {
       userId: 'ALZ-0002',
       name: 'Priya Nair',
       email: 'priya@allianza.team',
+      dob: new Date('1991-04-20'),
       phone: '+91 9800000411',
       role: 'member',
       status: 'active',
@@ -70,6 +80,7 @@ export async function GET() {
       userId: 'ALZ-0003',
       name: 'Megha Joshi',
       email: 'megha@allianza.team',
+      dob: birthTomorrow,
       phone: '+91 9800000412',
       role: 'member',
       status: 'active',
@@ -91,6 +102,7 @@ export async function GET() {
       userId: 'ALZ-0004',
       name: 'Anjali Kumar',
       email: 'anjali@allianza.team',
+      dob: new Date('1994-08-05'),
       phone: '+91 9800000427',
       role: 'member',
       status: 'active',
@@ -111,6 +123,7 @@ export async function GET() {
       userId: 'ALZ-0005',
       name: 'Rohit Sharma',
       email: 'rohit@allianza.team',
+      dob: birthToday,
       phone: '+91 9800000428',
       role: 'member',
       status: 'active',
@@ -132,6 +145,7 @@ export async function GET() {
       userId: 'ALZ-0006',
       name: 'Aravind Menon (Alt)',
       email: 'aravind@apex.team',
+      dob: new Date('1988-06-15'),
       phone: '+91 9800000001',
       role: 'super_admin',
       status: 'active',
@@ -152,6 +166,7 @@ export async function GET() {
       userId: 'ALZ-0007',
       name: 'Priya Nair (Alt)',
       email: 'priya@apex.team',
+      dob: new Date('1991-04-20'),
       phone: '+91 9800000411',
       role: 'member',
       status: 'active',

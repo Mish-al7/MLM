@@ -88,7 +88,7 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
               required
               value={formData.name}
               onChange={handleChange}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               placeholder="e.g. Leadership Summit 2024"
             />
           </div>
@@ -100,7 +100,7 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               placeholder="Details about the event..."
             />
           </div>
@@ -114,7 +114,7 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
                 required
                 value={formData.date}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               />
             </div>
             <div>
@@ -125,7 +125,7 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
                 required
                 value={formData.time}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               />
             </div>
           </div>
@@ -138,7 +138,7 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
               required
               value={formData.venue}
               onChange={handleChange}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               placeholder="e.g. Grand Hyatt, Mumbai"
             />
           </div>
@@ -153,7 +153,7 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
                 min="0"
                 value={formData.ticketPrice}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               />
             </div>
             <div>
@@ -164,7 +164,7 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
                 min="1"
                 value={formData.maxParticipants}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
                 placeholder="Leave blank for unlimited"
               />
             </div>
@@ -181,7 +181,7 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
                   min="0"
                   value={formData.minLeftBV}
                   onChange={handleChange}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-black focus:outline-none focus:border-amber-500 transition-colors"
                 />
               </div>
               <div>
@@ -192,7 +192,7 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
                   min="0"
                   value={formData.minRightBV}
                   onChange={handleChange}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-black focus:outline-none focus:border-amber-500 transition-colors"
                 />
               </div>
             </div>

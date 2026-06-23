@@ -110,7 +110,7 @@ export default function NominateEventModal({ isOpen, onClose, onSuccess, eventIt
               required
               value={formData.contactNumber}
               onChange={handleChange}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               placeholder="+91..."
             />
           </div>
@@ -123,7 +123,7 @@ export default function NominateEventModal({ isOpen, onClose, onSuccess, eventIt
               required
               value={formData.mainLeader}
               onChange={handleChange}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               placeholder="Your upline leader's name"
             />
           </div>
@@ -136,7 +136,7 @@ export default function NominateEventModal({ isOpen, onClose, onSuccess, eventIt
               required
               value={formData.paidTo}
               onChange={handleChange}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               placeholder="Person or account you paid to"
             />
           </div>

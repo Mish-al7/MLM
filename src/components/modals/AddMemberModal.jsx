@@ -11,6 +11,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
     email: '',
     phone: '',
     allianzaId: '',
+    dob: '',
     managerId: lockedManagerId || '',
     role: 'member',
   });
@@ -30,7 +31,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
 
     try {
       const payload = isLockedMode
-        ? { name: formData.name, email: formData.email, phone: formData.phone, allianzaId: formData.allianzaId }
+        ? { name: formData.name, email: formData.email, phone: formData.phone, allianzaId: formData.allianzaId, dob: formData.dob }
         : formData;
 
       const res = await fetch('/api/members', {
@@ -42,7 +43,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
       if (res.ok) {
         onSuccess(json.data);
         onClose();
-        setFormData({ name: '', email: '', phone: '', allianzaId: '', managerId: lockedManagerId || '', role: 'member' });
+        setFormData({ name: '', email: '', phone: '', allianzaId: '', dob: '', managerId: lockedManagerId || '', role: 'member' });
       } else {
         setError(json.error || 'Failed to add member.');
       }
@@ -89,7 +90,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
                 placeholder="e.g. John Doe"
               />
             </div>
@@ -101,7 +102,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
                 placeholder="name@company.com"
               />
             </div>
@@ -115,21 +116,34 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
                 placeholder="+91..."
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Allianza ID</label>
+              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Date of Birth *</label>
               <input 
-                type="text" 
-                name="allianzaId"
-                value={formData.allianzaId}
+                type="date" 
+                name="dob"
+                required
+                value={formData.dob}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
-                placeholder="Optional external ID"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Allianza ID *</label>
+            <input 
+              type="text" 
+              name="allianzaId"
+              required
+              value={formData.allianzaId}
+              onChange={handleChange}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
+              placeholder="Enter Allianza ID"
+            />
           </div>
 
           {/* Admin-only fields: manager picker + role selector */}
@@ -141,7 +155,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
                   name="managerId"
                   value={formData.managerId}
                   onChange={handleChange}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
                 >
                   <option value="">None (Root Node)</option>
                   {existingMembers.map(m => (
@@ -155,7 +169,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
                 >
                   <option value="member">Team Member</option>
                   <option value="super_admin">Super Admin</option>
