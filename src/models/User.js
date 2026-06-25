@@ -42,6 +42,7 @@ const UserSchema = new mongoose.Schema({
   upcomingReward: { type: String, default: '' },
   achievementDate: { type: Date },
   personalNotes: { type: String, default: '' },
+  password: { type: String }, // Hashed password
 
   // Audit Trails
   bvHistory: [BvHistorySchema],

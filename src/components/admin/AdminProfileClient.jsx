@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { User, Mail, Phone, Calendar, Shield, Edit2, Lock, Save, X, Sparkles } from 'lucide-react';
+import { User, Mail, Phone, Calendar, Shield, Edit2, Lock, Save, X, ShieldAlert } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-export default function MemberProfileClient({ currentUser }) {
+export default function AdminProfileClient({ currentUser }) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,11 +40,10 @@ export default function MemberProfileClient({ currentUser }) {
 
       const json = await res.json();
       if (res.ok) {
-        setMessage('Profile updated successfully! Refreshing...');
+        setMessage('Admin profile updated successfully! Refreshing...');
         setIsEditing(false);
         setPassword('');
         router.refresh();
-        // Force refresh state locally
         setTimeout(() => {
           window.location.reload();
         }, 1000);
@@ -62,13 +61,13 @@ export default function MemberProfileClient({ currentUser }) {
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-white font-heading">My Profile Details</h1>
-          <p className="text-zinc-400 text-xs mt-1">View or update your personal information and account status.</p>
+          <h1 className="text-2xl font-bold text-white font-heading">Admin Profile</h1>
+          <p className="text-zinc-400 text-xs mt-1">View and update your administrator credentials and profile details.</p>
         </div>
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black px-4 py-2 rounded-lg font-bold text-xs transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black px-4 py-2 rounded-lg font-bold text-xs transition-colors cursor-pointer shadow-md"
           >
             <Edit2 size={13} />
             <span>Edit Profile</span>
@@ -94,7 +93,7 @@ export default function MemberProfileClient({ currentUser }) {
             <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
               <div className="flex flex-col items-center gap-2">
                 <img 
-                  src={avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100'} 
+                  src={avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200'} 
                   alt="Profile Avatar" 
                   className="w-32 h-32 rounded-full border-4 border-zinc-800 object-cover" 
                 />
@@ -103,7 +102,7 @@ export default function MemberProfileClient({ currentUser }) {
 
               <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Full Name</label>
+                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Admin Name</label>
                   <input
                     type="text"
                     value={name}
@@ -157,7 +156,7 @@ export default function MemberProfileClient({ currentUser }) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">New Password (Leave blank to keep current)</label>
+                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Change Password</label>
                   <input
                     type="password"
                     value={password}
@@ -201,12 +200,13 @@ export default function MemberProfileClient({ currentUser }) {
           <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
             <div className="relative">
               <img 
-                src={currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100'} 
+                src={currentUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200'} 
                 alt={currentUser.name} 
-                className="w-32 h-32 rounded-full border-4 border-zinc-800 object-cover" 
+                className="w-32 h-32 rounded-full border-4 border-zinc-800 object-cover shadow-lg" 
               />
-              <div className="absolute -bottom-2 -right-2 bg-amber-500 text-black px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
-                {currentUser.rank || 'Associate'}
+              <div className="absolute -bottom-2 -right-2 bg-red-600 text-white px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 border border-red-500">
+                <ShieldAlert size={10} />
+                <span>{currentUser.role === 'super_admin' ? 'Admin' : 'Member'}</span>
               </div>
             </div>
 
@@ -236,9 +236,9 @@ export default function MemberProfileClient({ currentUser }) {
                 <div className="flex items-center gap-3 p-3 bg-zinc-900/50 rounded-lg border border-zinc-800/50">
                   <Calendar className="text-zinc-500" size={16} />
                   <div className="min-w-0">
-                    <p className="text-[10px] text-zinc-500 uppercase font-semibold">Join Date / DOB</p>
+                    <p className="text-[10px] text-zinc-500 uppercase font-semibold">Date of Birth</p>
                     <p className="text-sm text-zinc-300">
-                      DOB: {currentUser.dob ? new Date(currentUser.dob).toLocaleDateString() : 'N/A'} | Join: {new Date(currentUser.joiningDate || new Date()).toLocaleDateString()}
+                      {currentUser.dob ? new Date(currentUser.dob).toLocaleDateString() : 'N/A'}
                     </p>
                   </div>
                 </div>
@@ -246,8 +246,8 @@ export default function MemberProfileClient({ currentUser }) {
                 <div className="flex items-center gap-3 p-3 bg-zinc-900/50 rounded-lg border border-zinc-800/50">
                   <Shield className="text-zinc-500" size={16} />
                   <div className="min-w-0">
-                    <p className="text-[10px] text-zinc-500 uppercase font-semibold">Account Status</p>
-                    <p className="text-sm text-emerald-400 capitalize">{currentUser.status || 'Active'}</p>
+                    <p className="text-[10px] text-zinc-500 uppercase font-semibold">System Privileges</p>
+                    <p className="text-sm text-red-400 font-bold capitalize">Super Administrator</p>
                   </div>
                 </div>
               </div>

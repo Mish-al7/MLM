@@ -9,64 +9,37 @@ export default function Home() {
   
   // Session & Auth States
   const [authEmail, setAuthEmail] = useState('');
-  const [authOtp, setAuthOtp] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [devOtp, setDevOtp] = useState(null);
+  const [authPassword, setAuthPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [authSuccess, setAuthSuccess] = useState('');
   const [demoRoleLoading, setDemoRoleLoading] = useState(false);
   const [seedMessage, setSeedMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Auth: Request OTP code
-  const handleRequestOtp = async (e) => {
+  // Auth: Credentials Login
+  const handleLogin = async (e) => {
     e.preventDefault();
     setAuthError('');
     setAuthSuccess('');
-    setDevOtp(null);
-    if (!authEmail) return setAuthError('Please enter email.');
+    if (!authEmail || !authPassword) return setAuthError('Please enter both email and password.');
+    setLoading(true);
     try {
-      const res = await fetch('/api/auth/otp/send', {
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: authEmail })
-      });
-      const json = await res.json();
-      if (res.ok) {
-        setOtpSent(true);
-        setAuthSuccess('OTP code sent successfully!');
-        if (json.testOtp) {
-          setDevOtp(json.testOtp);
-        }
-      } else {
-        setAuthError(json.error || 'Failed to send OTP.');
-      }
-    } catch (err) {
-      setAuthError('Connection error.');
-    }
-  };
-
-  // Auth: Verify OTP code
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    setAuthError('');
-    setAuthSuccess('');
-    if (!authOtp) return setAuthError('Please enter OTP.');
-    try {
-      const res = await fetch('/api/auth/otp/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: authEmail, code: authOtp })
+        body: JSON.stringify({ email: authEmail, password: authPassword })
       });
       const json = await res.json();
       if (res.ok) {
         setAuthSuccess('Login successful!');
         router.push(json.user.role === 'super_admin' ? '/admin' : '/member');
       } else {
-        setAuthError(json.error || 'Invalid or expired OTP.');
+        setAuthError(json.error || 'Invalid email or password.');
       }
     } catch (err) {
-      setAuthError('Verification error.');
+      setAuthError('Connection error.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -143,67 +116,37 @@ export default function Home() {
           </div>
         )}
 
-        {!otpSent ? (
-          <form onSubmit={handleRequestOtp} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Email Address</label>
-              <input 
-                type="email" 
-                value={authEmail} 
-                onChange={(e) => setAuthEmail(e.target.value)}
-                placeholder="name@company.com" 
-                className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 text-black focus:outline-none focus:border-blue-500 transition-colors"
-              />
-            </div>
-            <button 
-              type="submit" 
-              className="w-full bg-gold-gradient py-3 rounded-lg font-bold text-white hover:opacity-90 transition-opacity flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-blue-500/20"
-            >
-              <span>Request OTP Code</span>
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleVerifyOtp} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">6-Digit Verification Code</label>
-              <input 
-                type="text" 
-                maxLength={6}
-                value={authOtp} 
-                onChange={(e) => setAuthOtp(e.target.value)}
-                placeholder="Enter 6-digit OTP" 
-                className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 text-black tracking-[0.3em] text-center font-mono text-xl focus:outline-none focus:border-blue-500 transition-colors"
-              />
-            </div>
-
-            {devOtp && (
-              <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg text-center">
-                <p className="text-xs text-zinc-500">Dev Testing OTP Helper</p>
-                <button 
-                  type="button" 
-                  onClick={() => setAuthOtp(devOtp)}
-                  className="mt-1 text-sm font-mono font-bold text-blue-600 underline cursor-pointer"
-                >
-                  Click to Auto-fill: {devOtp}
-                </button>
-              </div>
-            )}
-
-            <button 
-              type="submit" 
-              className="w-full bg-gold-gradient py-3 rounded-lg font-bold text-white hover:opacity-90 transition-opacity cursor-pointer shadow-md shadow-blue-500/20"
-            >
-              Verify & Login
-            </button>
-            <button 
-              type="button" 
-              onClick={() => setOtpSent(false)} 
-              className="w-full text-center text-xs text-zinc-500 hover:text-zinc-700 transition-colors underline cursor-pointer"
-            >
-              Request another code
-            </button>
-          </form>
-        )}
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Email Address</label>
+            <input 
+              type="email" 
+              value={authEmail} 
+              onChange={(e) => setAuthEmail(e.target.value)}
+              placeholder="name@company.com" 
+              className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 text-black focus:outline-none focus:border-blue-500 transition-colors"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Password</label>
+            <input 
+              type="password" 
+              value={authPassword} 
+              onChange={(e) => setAuthPassword(e.target.value)}
+              placeholder="••••••••" 
+              className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 text-black focus:outline-none focus:border-blue-500 transition-colors"
+              required
+            />
+          </div>
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="w-full bg-gold-gradient py-3 rounded-lg font-bold text-white hover:opacity-90 transition-opacity flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-blue-500/20 disabled:opacity-50"
+          >
+            <span>{loading ? 'Logging in...' : 'Sign In'}</span>
+          </button>
+        </form>
 
         {/* Quick Demo Switcher Section */}
         <div className="mt-8 pt-6 border-t border-zinc-100">

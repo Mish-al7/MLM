@@ -15,17 +15,16 @@ export default async function AdminTeamPage() {
   // Fetch initial members for SSR
   const members = await User.find({}).sort({ joiningDate: -1 }).lean();
   
-  // Serialize ObjectIds
-  const safeMembers = members.map(m => ({
-    ...m,
-    _id: m._id.toString(),
-    managerName: m.managerId ? (members.find(x => x.userId === m.managerId)?.name || m.managerId) : 'None'
-  }));
+  // Serialize recursively to pass to Client Component safely
+  const safeMembers = members.map(m => {
+    const managerName = m.managerId ? (members.find(x => x.userId === m.managerId)?.name || m.managerId) : 'None';
+    return {
+      ...JSON.parse(JSON.stringify(m)),
+      managerName
+    };
+  });
   
-  const safeUser = {
-    ...user,
-    _id: user._id.toString()
-  };
+  const safeUser = JSON.parse(JSON.stringify(user));
 
   return <AdminTeamClient initialMembers={safeMembers} currentUser={safeUser} />;
 }

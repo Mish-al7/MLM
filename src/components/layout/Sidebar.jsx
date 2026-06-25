@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   Users, Award, FileText, Calendar as CalendarIcon, Image as ImageIcon, 
-  Bell, Volume2, Layers, LogOut, UserPlus, User as UserIcon, Menu, X
+  Bell, Volume2, Layers, LogOut, UserPlus, User as UserIcon, Menu, X, Trophy
 } from 'lucide-react';
 
 export default function Sidebar({ user }) {
@@ -22,6 +22,7 @@ export default function Sidebar({ user }) {
     { id: '', label: 'Dashboard', icon: <Layers size={18} />, adminOnly: false },
     { id: 'team', label: isAdmin ? 'Team Hierarchy' : 'My Team', icon: <Users size={18} />, adminOnly: false },
     { id: 'referrals', label: 'Referral Team', icon: <UserPlus size={18} />, adminOnly: true },
+    { id: 'achievements', label: 'Achievements Portal', icon: <Trophy size={18} />, adminOnly: true },
     { id: 'news', label: 'News Center', icon: <Volume2 size={18} />, adminOnly: false },
     { id: 'updates', label: 'Quick Announcements', icon: <Bell size={18} />, adminOnly: false },
     { id: 'documents', label: 'Business Documents', icon: <FileText size={18} />, adminOnly: false },

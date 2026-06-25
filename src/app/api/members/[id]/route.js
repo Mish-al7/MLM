@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import User from '@/models/User';
-import { getSessionUser } from '@/lib/auth';
+import { getSessionUser, hashPassword } from '@/lib/auth';
 
 export async function GET(req, { params }) {
   try {
@@ -57,12 +57,54 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ error: 'Forbidden: You can only edit your own values or you must be Super Admin.' }, { status: 403 });
     }
 
-    if (isAdmin) {
+    if (isSelf) {
+      // Self edit flow (Member or Admin editing their own profile)
+      const { name, email, phone, avatar, dob, password, leftBV, rightBV } = body;
+
+      // Check Email unique constraint if email is changed
+      if (email && email.toLowerCase() !== targetUser.email) {
+        const emailExists = await User.findOne({ email: email.toLowerCase() });
+        if (emailExists) {
+          return NextResponse.json({ error: 'Email already registered' }, { status: 400 });
+        }
+        targetUser.email = email.toLowerCase();
+      }
+
+      if (name) targetUser.name = name;
+      if (phone !== undefined) targetUser.phone = phone;
+      if (avatar !== undefined) targetUser.avatar = avatar;
+      if (dob !== undefined) targetUser.dob = dob ? new Date(dob) : null;
+      
+      if (password) {
+        targetUser.password = hashPassword(password);
+      }
+
+      // If they are self-updating BV (mainly for members)
+      const newLeft = leftBV !== undefined ? Number(leftBV) : targetUser.leftBV;
+      const newRight = rightBV !== undefined ? Number(rightBV) : targetUser.rightBV;
+
+      if (newLeft !== targetUser.leftBV || newRight !== targetUser.rightBV) {
+        targetUser.bvHistory.push({
+          oldLeft: targetUser.leftBV,
+          newLeft: newLeft,
+          oldRight: targetUser.rightBV,
+          newRight: newRight,
+          updatedBy: currentUser.userId,
+          timestamp: new Date()
+        });
+        targetUser.leftBV = newLeft;
+        targetUser.rightBV = newRight;
+      }
+
+      await targetUser.save();
+      return NextResponse.json({ success: true, data: targetUser });
+
+    } else if (isAdmin) {
       // Super Admin edit flow (can edit anything)
       const {
         name, email, phone, allianzaId, managerId, status, role,
         leftBV, rightBV, rank, reward, upcomingRank, upcomingReward,
-        achievementDate, personalNotes
+        achievementDate, personalNotes, avatar, dob, password
       } = body;
 
       // Handle Manager update checks
@@ -125,6 +167,9 @@ export async function PATCH(req, { params }) {
       // Standard fields updates
       if (name) targetUser.name = name;
       if (phone !== undefined) targetUser.phone = phone;
+      if (avatar !== undefined) targetUser.avatar = avatar;
+      if (dob !== undefined) targetUser.dob = dob ? new Date(dob) : null;
+      if (password) targetUser.password = hashPassword(password);
       if (allianzaId !== undefined) targetUser.allianzaId = allianzaId;
       if (status) targetUser.status = status;
       if (role) targetUser.role = role;
@@ -132,33 +177,6 @@ export async function PATCH(req, { params }) {
       if (upcomingReward !== undefined) targetUser.upcomingReward = upcomingReward;
       if (achievementDate !== undefined) targetUser.achievementDate = achievementDate ? new Date(achievementDate) : null;
       if (personalNotes !== undefined) targetUser.personalNotes = personalNotes;
-
-      await targetUser.save();
-      return NextResponse.json({ success: true, data: targetUser });
-
-    } else {
-      // Member edit flow (can ONLY edit leftBV and rightBV)
-      const { leftBV, rightBV } = body;
-
-      if (leftBV === undefined && rightBV === undefined) {
-        return NextResponse.json({ error: 'You are only authorized to update Left or Right Business Values.' }, { status: 400 });
-      }
-
-      const newLeft = leftBV !== undefined ? Number(leftBV) : targetUser.leftBV;
-      const newRight = rightBV !== undefined ? Number(rightBV) : targetUser.rightBV;
-
-      if (newLeft !== targetUser.leftBV || newRight !== targetUser.rightBV) {
-        targetUser.bvHistory.push({
-          oldLeft: targetUser.leftBV,
-          newLeft: newLeft,
-          oldRight: targetUser.rightBV,
-          newRight: newRight,
-          updatedBy: currentUser.userId,
-          timestamp: new Date()
-        });
-        targetUser.leftBV = newLeft;
-        targetUser.rightBV = newRight;
-      }
 
       await targetUser.save();
       return NextResponse.json({ success: true, data: targetUser });

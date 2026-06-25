@@ -18,11 +18,8 @@ export default async function MemberLayout({ children }) {
     redirect('/');
   }
 
-  // Convert ObjectIds to strings to pass to client component
-  const safeUser = {
-    ...user,
-    _id: user._id.toString()
-  };
+  // Convert ObjectIds to strings recursively to pass to client component safely
+  const safeUser = JSON.parse(JSON.stringify(user));
 
   return (
     <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-white font-sans">

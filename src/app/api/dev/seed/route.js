@@ -8,6 +8,7 @@ import News from '@/models/News';
 import Update from '@/models/Update';
 import Document from '@/models/Document';
 import Media from '@/models/Media';
+import { hashPassword } from '@/lib/auth';
 
 export async function GET() {
   try {
@@ -50,7 +51,8 @@ export async function GET() {
       reward: 'Bali Leadership Retreat',
       upcomingRank: 'Crown',
       upcomingReward: 'Lexus ES',
-      personalNotes: 'Network founder leading international operations.'
+      personalNotes: 'Network founder leading international operations.',
+      password: hashPassword('password123')
     });
     await aravind.save();
 
@@ -72,7 +74,8 @@ export async function GET() {
       reward: 'Goa Trip',
       upcomingRank: 'Diamond',
       upcomingReward: 'Bali Retreat',
-      personalNotes: 'Top leader of Support Leg A.'
+      personalNotes: 'Top leader of Support Leg A.',
+      password: hashPassword('password123')
     });
     await priya.save();
 
@@ -93,7 +96,8 @@ export async function GET() {
       reward: 'Bali Retreat',
       upcomingRank: 'Crown',
       upcomingReward: 'Lexus ES',
-      personalNotes: 'Key leader of Support Leg B.'
+      personalNotes: 'Key leader of Support Leg B.',
+      password: hashPassword('password123')
     });
     await megha.save();
 
@@ -115,7 +119,8 @@ export async function GET() {
       reward: 'Phuket Trip',
       upcomingRank: 'Platinum',
       upcomingReward: 'Dubai Summit + ₹50k',
-      personalNotes: 'Rising star in Priya\'s organization.'
+      personalNotes: 'Rising star in Priya\'s organization.',
+      password: hashPassword('password123')
     });
     await anjali.save();
 
@@ -136,7 +141,8 @@ export async function GET() {
       reward: 'Leadership Pin',
       upcomingRank: 'Gold',
       upcomingReward: 'Phuket Trip',
-      personalNotes: 'Expanding network aggressively.'
+      personalNotes: 'Expanding network aggressively.',
+      password: hashPassword('password123')
     });
     await rohit.save();
 
@@ -158,7 +164,8 @@ export async function GET() {
       reward: 'Bali Leadership Retreat',
       upcomingRank: 'Crown',
       upcomingReward: 'Lexus ES',
-      personalNotes: 'Alternative profile for Aravind Menon.'
+      personalNotes: 'Alternative profile for Aravind Menon.',
+      password: hashPassword('password123')
     });
     await aravindFallback.save();
 
@@ -179,7 +186,8 @@ export async function GET() {
       reward: 'Goa Trip',
       upcomingRank: 'Diamond',
       upcomingReward: 'Bali Retreat',
-      personalNotes: 'Alternative profile for Priya Nair.'
+      personalNotes: 'Alternative profile for Priya Nair.',
+      password: hashPassword('password123')
     });
     await priyaFallback.save();
 

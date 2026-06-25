@@ -12,11 +12,8 @@ export default async function MemberDashboard() {
   
   const user = await User.findOne({ userId: session.userId }).lean();
   
-  // Serialize ObjectId to string for Client Component
-  const safeUser = {
-    ...user,
-    _id: user._id.toString()
-  };
+  // Serialize user recursively to prevent server/client hydration errors
+  const safeUser = JSON.parse(JSON.stringify(user));
 
   return <MemberDashboardClient initialUser={safeUser} />;
 }
