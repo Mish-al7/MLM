@@ -8,6 +8,7 @@ import News from '@/models/News';
 import Update from '@/models/Update';
 import Document from '@/models/Document';
 import Media from '@/models/Media';
+import Rank from '@/models/Rank';
 import { hashPassword } from '@/lib/auth';
 
 export async function GET() {
@@ -23,6 +24,7 @@ export async function GET() {
     await Update.deleteMany({});
     await Document.deleteMany({});
     await Media.deleteMany({});
+    await Rank.deleteMany({});
 
     // 2. Create Members Hierarchy
     const localTimeStr = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
@@ -299,6 +301,17 @@ export async function GET() {
       uploadedBy: 'Super Admin'
     });
     await media2.save();
+
+    // 8. Create standard Ranks
+    const ranks = [
+      { name: 'Associate', reward: 'None', target: 'Default onboarding level', targetLeftBv: 0, targetRightBv: 0, iconName: 'Star' },
+      { name: 'Silver', reward: 'Leadership Pin', target: 'Left & Right BV > 5,000', targetLeftBv: 5000, targetRightBv: 5000, iconName: 'Award' },
+      { name: 'Gold', reward: 'Phuket Trip', target: 'Left & Right BV > 25,000', targetLeftBv: 25000, targetRightBv: 25000, iconName: 'Compass' },
+      { name: 'Platinum', reward: 'Goa Trip', target: 'Left & Right BV > 50,000', targetLeftBv: 50000, targetRightBv: 50000, iconName: 'MapPin' },
+      { name: 'Diamond', reward: 'Bali Leadership Retreat', target: 'Left & Right BV > 80,000', targetLeftBv: 80000, targetRightBv: 80000, iconName: 'Trophy' },
+      { name: 'Crown', reward: 'Lexus ES', target: 'Left & Right BV > 150,000', targetLeftBv: 150000, targetRightBv: 150000, iconName: 'Car' }
+    ];
+    await Rank.insertMany(ranks);
 
     return NextResponse.json({ 
       success: true, 

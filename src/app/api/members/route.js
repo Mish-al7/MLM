@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import User from '@/models/User';
-import { getSessionUser } from '@/lib/auth';
+import { getSessionUser, hashPassword } from '@/lib/auth';
 
 // Helper to map rank names to numerical weights for sorting
 const rankWeights = {
@@ -90,7 +90,7 @@ export async function POST(req) {
 
     const isAdmin = currentUser.role === 'super_admin';
     const body = await req.json();
-    const { name, email, dob, phone, allianzaId, joiningDate } = body;
+    const { name, email, dob, phone, allianzaId, joiningDate, password } = body;
 
     // Members can only add under themselves; admins can pick any managerId/role/status
     const managerId = isAdmin ? (body.managerId || null) : currentUser.userId;
@@ -107,17 +107,12 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 });
     }
 
-    // Auto-generate User ID (e.g. ALZ-0001)
-    const lastUser = await User.findOne().sort({ createdAt: -1 });
-    let nextNum = 1;
-    if (lastUser && lastUser.userId.startsWith('ALZ-')) {
-      const parts = lastUser.userId.split('-');
-      const num = parseInt(parts[1], 10);
-      if (!isNaN(num)) {
-        nextNum = num + 1;
-      }
+    // Use the user-inputted Allianza ID as the primary unique userId key
+    const targetUserId = allianzaId.trim().toUpperCase();
+    const duplicateId = await User.findOne({ userId: targetUserId });
+    if (duplicateId) {
+      return NextResponse.json({ error: `Allianza ID "${targetUserId}" is already taken` }, { status: 400 });
     }
-    const userId = `ALZ-${nextNum.toString().padStart(4, '0')}`;
 
     // Verify manager exists if specified
     if (managerId) {
@@ -128,16 +123,17 @@ export async function POST(req) {
     }
 
     const newUser = new User({
-      userId,
+      userId: targetUserId,
       name,
       email: email.toLowerCase(),
       dob: new Date(dob),
       phone: phone || '',
-      allianzaId: allianzaId || '',
+      allianzaId: targetUserId,
       managerId: managerId || null,
       joiningDate: joiningDate ? new Date(joiningDate) : new Date(),
       role,
-      status
+      status,
+      password: password ? hashPassword(password) : hashPassword('password123')
     });
 
     await newUser.save();
