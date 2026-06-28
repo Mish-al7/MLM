@@ -24,8 +24,8 @@ export default async function AdminLayout({ children }) {
   return (
     <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-white font-sans">
       <Sidebar user={safeUser} />
-      <main className="flex-1 flex flex-col h-screen overflow-hidden relative z-10 bg-white text-zinc-900">
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+      <main className="flex-1 flex flex-col h-screen overflow-hidden relative md:z-10 bg-white text-zinc-900">
+        <div className="flex-1 overflow-y-auto pt-18 pb-20 md:p-8 custom-scrollbar">
           {children}
         </div>
       </main>

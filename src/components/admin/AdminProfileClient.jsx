@@ -87,7 +87,7 @@ export default function AdminProfileClient({ currentUser }) {
         </div>
       )}
 
-      <div className="p-8 rounded-2xl glass-panel border border-zinc-800">
+      <div className="p-4 md:p-8 rounded-2xl glass-panel border border-zinc-800">
         {isEditing ? (
           <form onSubmit={handleSave} className="space-y-6">
             <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
@@ -139,7 +139,6 @@ export default function AdminProfileClient({ currentUser }) {
                     type="text"
                     value={avatar}
                     onChange={(e) => setAvatar(e.target.value)}
-                    placeholder="https://example.com/avatar.jpg"
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
                   />
                 </div>
@@ -151,47 +150,45 @@ export default function AdminProfileClient({ currentUser }) {
                     value={dob}
                     onChange={(e) => setDob(e.target.value)}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
-                    required
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Change Password</label>
+                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">New Password (leave blank to keep current)</label>
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter new password"
+                    placeholder="••••••••"
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t border-zinc-900">
+            <div className="pt-6 border-t border-zinc-950 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => {
                   setIsEditing(false);
-                  setName(currentUser.name || '');
-                  setEmail(currentUser.email || '');
+                  setName(currentUser.name);
+                  setEmail(currentUser.email);
                   setPhone(currentUser.phone || '');
                   setAvatar(currentUser.avatar || '');
                   setDob(currentUser.dob ? new Date(currentUser.dob).toISOString().split('T')[0] : '');
                   setPassword('');
                 }}
                 disabled={loading}
-                className="flex items-center gap-1.5 px-4 py-2 border border-zinc-800 text-zinc-400 hover:text-white rounded-lg text-xs font-semibold cursor-pointer"
+                className="px-4 py-2.5 rounded-xl font-semibold text-xs text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors border border-slate-200"
               >
-                <X size={14} />
                 <span>Cancel</span>
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black px-4 py-2 rounded-lg text-xs font-bold cursor-pointer disabled:opacity-50"
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs transition-colors shadow-sm shadow-blue-500/10 cursor-pointer disabled:opacity-50"
               >
-                <Save size={14} />
+                <Save size={14} strokeWidth={2.5} />
                 <span>{loading ? 'Saving...' : 'Save Changes'}</span>
               </button>
             </div>

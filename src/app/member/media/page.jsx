@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image as ImageIcon } from 'lucide-react';
 import { getSessionUser } from '@/lib/auth';
+import PageHeader from '@/components/shared/PageHeader';
 
 export default async function MemberMediaPage() {
   const session = await getSessionUser();
@@ -8,14 +9,14 @@ export default async function MemberMediaPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white font-heading">Media Gallery</h1>
-        <p className="text-zinc-400 text-xs mt-1">Photos and videos from recent events.</p>
-      </div>
+      <PageHeader
+        title="Media Gallery"
+        subtitle="Photos and videos from recent events."
+      />
 
-      <div className="p-8 text-center text-zinc-600 border border-dashed border-zinc-800 rounded-xl glass-panel">
-        <ImageIcon size={40} className="mx-auto mb-4 text-zinc-700" />
-        <p>Gallery is empty.</p>
+      <div className="p-8 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl bg-slate-50">
+        <ImageIcon size={40} className="mx-auto mb-4 text-slate-300" />
+        <p className="text-sm font-semibold">Gallery is empty</p>
       </div>
     </div>
   );

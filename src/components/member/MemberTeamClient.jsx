@@ -98,6 +98,24 @@ export default function MemberTeamClient({ currentUser, allMembers }) {
                       </span>
                     </div>
                     <p className="text-xs text-zinc-500 font-mono mt-0.5">{node.userId}</p>
+                    
+                    {/* Inline mobile stats */}
+                    <div className="flex md:hidden items-center gap-3 mt-1.5 pt-1.5 border-t border-zinc-800/20">
+                      <div>
+                        <span className="text-[9px] text-zinc-500 uppercase font-semibold">BV: </span>
+                        <span className="text-xs font-bold text-amber-500 font-mono">
+                          {((node.leftBV || 0) + (node.rightBV || 0)).toLocaleString()}
+                        </span>
+                      </div>
+                      {hasChildren && (
+                        <div>
+                          <span className="text-[9px] text-zinc-500 uppercase font-semibold">Team: </span>
+                          <span className="text-xs font-bold text-emerald-400">
+                            {descCount + node.children.length}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Stats */}
@@ -190,7 +208,11 @@ export default function MemberTeamClient({ currentUser, allMembers }) {
             </button>
           </div>
         ) : (
-          renderNodes(directChildren)
+          <div className="overflow-x-auto pb-4 custom-scrollbar">
+            <div className="min-w-[650px] pr-4">
+              {renderNodes(directChildren)}
+            </div>
+          </div>
         )}
       </div>
 

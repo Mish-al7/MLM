@@ -272,7 +272,7 @@ export default function CalendarView({ isAdmin = false }) {
                   key={idx}
                   onClick={() => cell.isCurrentMonth && handleDateClick(cell)}
                   disabled={!cell.isCurrentMonth}
-                  className={`relative p-2.5 min-h-[80px] text-left transition-all border-b border-slate-100 ${
+                  className={`relative p-2 flex flex-col justify-between text-left items-stretch min-h-[56px] md:min-h-[80px] transition-all border-b border-slate-100 ${
                     !cell.isCurrentMonth
                       ? 'bg-transparent cursor-default select-none pointer-events-none'
                       : isTodayCell
@@ -282,34 +282,36 @@ export default function CalendarView({ isAdmin = false }) {
                           : 'bg-white hover:bg-slate-50/60 cursor-pointer'
                   }`}
                 >
-                  <span className={`text-sm font-mono ${
-                    !cell.isCurrentMonth
-                      ? 'text-slate-300'
-                      : isTodayCell
-                        ? 'text-blue-600 font-bold'
-                        : 'text-slate-600'
-                  }`}>
-                    {cell.day}
-                  </span>
+                  <div className="flex justify-between items-start w-full">
+                    <span className={`text-xs md:text-sm font-mono leading-none ${
+                      !cell.isCurrentMonth
+                        ? 'text-slate-300'
+                        : isTodayCell
+                          ? 'text-blue-600 font-bold'
+                          : 'text-slate-600'
+                    }`}>
+                      {cell.day}
+                    </span>
 
-                  {/* Note category dots */}
-                  {noteDots.length > 0 && (
-                    <div className="absolute top-2.5 right-2.5 flex gap-1">
-                      {noteDots.map((cat, i) => (
-                        <div key={i} className={`w-1.5 h-1.5 rounded-full ${CATEGORY_CONFIG[cat]?.dot || 'bg-zinc-500'}`} />
-                      ))}
-                    </div>
-                  )}
+                    {/* Note category dots */}
+                    {noteDots.length > 0 && (
+                      <div className="flex gap-1 shrink-0 pt-0.5">
+                        {noteDots.map((cat, i) => (
+                          <div key={i} className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${CATEGORY_CONFIG[cat]?.dot || 'bg-zinc-500'}`} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
                   {hasEvents && cell.isCurrentMonth && (
-                    <div className="mt-1 space-y-0.5">
-                      {eventsByDate[cell.date].slice(0, 2).map((ev, i) => (
-                        <div key={i} className="text-[9px] font-semibold text-blue-600 bg-blue-50 px-1 py-0.5 rounded truncate border border-blue-100/30">
+                    <div className="mt-1 space-y-0.5 w-full">
+                      {eventsByDate[cell.date].slice(0, 1).map((ev, i) => (
+                        <div key={i} className="text-[8px] md:text-[9px] font-semibold text-blue-600 bg-blue-50 px-1 py-0.5 rounded truncate border border-blue-100/30 w-full">
                           {ev.name}
                         </div>
                       ))}
-                      {eventsByDate[cell.date].length > 2 && (
-                        <div className="text-[9px] text-slate-400 px-1">+{eventsByDate[cell.date].length - 2} more</div>
+                      {eventsByDate[cell.date].length > 1 && (
+                        <div className="text-[8px] md:text-[9px] text-slate-400 px-1 leading-none font-medium mt-0.5">+{eventsByDate[cell.date].length - 1} event{eventsByDate[cell.date].length - 1 > 1 ? 's' : ''}</div>
                       )}
                     </div>
                   )}

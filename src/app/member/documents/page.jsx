@@ -1,6 +1,7 @@
 import React from 'react';
 import { FileText } from 'lucide-react';
 import { getSessionUser } from '@/lib/auth';
+import PageHeader from '@/components/shared/PageHeader';
 
 export default async function MemberDocumentsPage() {
   const session = await getSessionUser();
@@ -8,14 +9,14 @@ export default async function MemberDocumentsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white font-heading">Business Documents</h1>
-        <p className="text-zinc-400 text-xs mt-1">Access knowledge sharing materials and training presentations.</p>
-      </div>
+      <PageHeader
+        title="Business Documents"
+        subtitle="Access knowledge sharing materials and training presentations."
+      />
 
-      <div className="p-8 text-center text-zinc-600 border border-dashed border-zinc-800 rounded-xl glass-panel">
-        <FileText size={40} className="mx-auto mb-4 text-zinc-700" />
-        <p>No documents available right now.</p>
+      <div className="p-8 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl bg-slate-50">
+        <FileText size={40} className="mx-auto mb-4 text-slate-300" />
+        <p className="text-sm font-semibold">No documents available right now</p>
       </div>
     </div>
   );

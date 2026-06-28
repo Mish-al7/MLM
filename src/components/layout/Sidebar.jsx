@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   Users, Award, FileText, Calendar as CalendarIcon, Image as ImageIcon,
   Bell, Volume2, LayoutDashboard, LogOut, UserPlus,
-  Menu, X, Trophy, BarChart2, Briefcase, Settings
+  Menu, X, Trophy, BarChart2, Briefcase, Settings, BookOpen
 } from 'lucide-react';
 
 // ─── Navigation Architecture ──────────────────────────────────────────────────
@@ -49,6 +49,7 @@ const NAV_STRUCTURE = (isAdmin) => [
     items: [
       { id: 'documents', label: 'Documents',     icon: FileText,  adminOnly: false },
       { id: 'media',     label: 'Media Gallery', icon: ImageIcon, adminOnly: false },
+      { id: 'ledger',    label: 'Personal Ledger', icon: BookOpen,  adminOnly: false },
     ],
   },
 ];
@@ -153,30 +154,38 @@ export default function Sidebar({ user }) {
   return (
     <>
       {/* ── Mobile header ────────────────────────────────────────────────────── */}
-      <header className="flex md:hidden items-center justify-between px-5 py-3.5 bg-white border-b border-slate-100 w-full z-30 shrink-0">
+      <header className="fixed top-0 left-0 w-full h-14 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-4 z-50 md:hidden">
         <div>
           <h2 className="text-base font-black tracking-widest font-heading">
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">ALLIANZA</span>
           </h2>
-          <p className="text-[8px] text-slate-400 uppercase tracking-widest font-semibold">Leadership Platform</p>
         </div>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="p-2 text-slate-500 hover:bg-slate-50 rounded-lg border border-slate-100 transition-colors"
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X size={18} strokeWidth={2} /> : <Menu size={18} strokeWidth={2} />}
-        </button>
+        <div className="flex items-center gap-2">
+          <Link href={profileHref} className="relative flex-shrink-0">
+            <img
+              src={user.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100'}
+              alt={user.name}
+              className="w-8 h-8 rounded-full object-cover border border-slate-100 shadow-sm"
+            />
+          </Link>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-1.5 text-slate-500 hover:bg-slate-50 rounded-lg border border-slate-100 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X size={18} strokeWidth={2} /> : <Menu size={18} strokeWidth={2} />}
+          </button>
+        </div>
       </header>
 
-      {/* ── Mobile menu panel ─────────────────────────────────────────────────── */}
+      {/* ── Mobile menu panel (Drawer overlay) ────────────────────────────────── */}
       {isOpen && (
         <div
-          className="md:hidden fixed inset-0 top-[57px] bg-black/10 z-20 backdrop-blur-sm"
+          className="md:hidden fixed inset-0 top-[56px] bg-black/10 z-20 backdrop-blur-sm"
           onClick={() => setIsOpen(false)}
         >
           <div
-            className="bg-white border-b border-slate-100 max-h-[88vh] overflow-y-auto flex flex-col shadow-xl"
+            className="bg-white border-b border-slate-100 max-h-[80vh] overflow-y-auto flex flex-col shadow-xl"
             onClick={e => e.stopPropagation()}
           >
             <ProfileCard onClick={() => setIsOpen(false)} />
@@ -218,6 +227,95 @@ export default function Sidebar({ user }) {
           </div>
         </div>
       )}
+
+      {/* ── Mobile bottom navigation 5 tabs ────────────────────────────────────── */}
+      <nav className="grid grid-cols-5 h-16 fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-md border-t border-slate-100 shadow-lg z-50 md:hidden">
+        {/* Tab 1: Dashboard */}
+        {(() => {
+          const href = basePath;
+          const isActive = pathname === href;
+          return (
+            <Link
+              href={href}
+              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
+                isActive ? 'text-[#2563EB]' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              <LayoutDashboard size={18} strokeWidth={isActive ? 2.2 : 1.75} />
+              <span className="text-[10px] font-semibold tracking-wide">Dashboard</span>
+            </Link>
+          );
+        })()}
+
+        {/* Tab 2: Team */}
+        {(() => {
+          const href = `${basePath}/team`;
+          const isActive = pathname.startsWith(href);
+          const label = isAdmin ? 'Team Hierarchy' : 'My Team';
+          return (
+            <Link
+              href={href}
+              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
+                isActive ? 'text-[#2563EB]' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              <Users size={18} strokeWidth={isActive ? 2.2 : 1.75} />
+              <span className="text-[10px] font-semibold tracking-wide truncate max-w-full px-1">{label}</span>
+            </Link>
+          );
+        })()}
+
+        {/* Tab 3: Calendar */}
+        {(() => {
+          const href = `${basePath}/calendar`;
+          const isActive = pathname.startsWith(href);
+          return (
+            <Link
+              href={href}
+              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
+                isActive ? 'text-[#2563EB]' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              <CalendarIcon size={18} strokeWidth={isActive ? 2.2 : 1.75} />
+              <span className="text-[10px] font-semibold tracking-wide">Calendar</span>
+            </Link>
+          );
+        })()}
+
+        {/* Tab 4: Announcements */}
+        {(() => {
+          const href = `${basePath}/updates`;
+          const isActive = pathname.startsWith(href);
+          return (
+            <Link
+              href={href}
+              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
+                isActive ? 'text-[#2563EB]' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              <Bell size={18} strokeWidth={isActive ? 2.2 : 1.75} />
+              <span className="text-[10px] font-semibold tracking-wide">Announcements</span>
+            </Link>
+          );
+        })()}
+
+        {/* Tab 5: Documents */}
+        {(() => {
+          const href = `${basePath}/documents`;
+          const isActive = pathname.startsWith(href);
+          return (
+            <Link
+              href={href}
+              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
+                isActive ? 'text-[#2563EB]' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              <FileText size={18} strokeWidth={isActive ? 2.2 : 1.75} />
+              <span className="text-[10px] font-semibold tracking-wide">Documents</span>
+            </Link>
+          );
+        })()}
+      </nav>
 
       {/* ── Desktop sidebar ───────────────────────────────────────────────────── */}
       <aside className="hidden md:flex w-[220px] flex-col bg-white border-r border-slate-100 z-20 h-screen shrink-0">

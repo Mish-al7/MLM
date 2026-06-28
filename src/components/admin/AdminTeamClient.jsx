@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Users, Search, Plus, ChevronDown, ChevronRight } from 'lucide-react';
+import { Users, Search, Plus, ChevronDown, ChevronRight, X } from 'lucide-react';
 import AddMemberModal from '@/components/modals/AddMemberModal';
 
 // Recursively count all descendants under a node in the map
@@ -145,7 +145,7 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-xl font-bold text-white font-heading">Organizational Hierarchy Tree</h1>
           <p className="text-zinc-400 text-xs mt-0.5">
@@ -153,22 +153,22 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
           </p>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+          <div className="relative w-full sm:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
             <input
               type="text"
               placeholder="Search member ID or name..."
               value={memberSearch}
               onChange={(e) => setMemberSearch(e.target.value)}
-              className="bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-4 py-2 text-sm text-black focus:outline-none focus:border-amber-500 transition-colors w-64"
+              className="bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-4 py-2 text-sm text-black focus:outline-none focus:border-amber-500 transition-colors w-full"
             />
           </div>
 
           <select
             value={memberSort}
             onChange={(e) => setMemberSort(e.target.value)}
-            className="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-black focus:outline-none focus:border-amber-500"
+            className="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-black focus:outline-none focus:border-amber-500 w-full sm:w-auto"
           >
             <option value="date">Sort by Join Date</option>
             <option value="bv">Sort by Business Value</option>
@@ -177,7 +177,7 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
 
           <button
             onClick={() => setIsAddMemberOpen(true)}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10"
+            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10 w-full sm:w-auto"
           >
             <Plus size={15} strokeWidth={2.5} />
             <span>Add Member</span>
@@ -205,14 +205,16 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
               No members found.
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              {renderTreeNodes(rootNodes, userMap)}
+            <div className="overflow-x-auto pb-4 custom-scrollbar">
+              <div className="min-w-[650px] pr-4">
+                {renderTreeNodes(rootNodes, userMap)}
+              </div>
             </div>
           )}
         </div>
 
         {/* Selected Member Detail Panel */}
-        <div className="space-y-6">
+        <div className="hidden lg:block space-y-6">
           {selectedMember ? (
             <div className="p-6 rounded-2xl glass-panel border border-zinc-800 space-y-5">
               <div className="flex items-center space-x-3 pb-4 border-b border-zinc-900">
@@ -273,6 +275,73 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
           )}
         </div>
       </div>
+
+      {/* Mobile-only selected member details modal */}
+      {selectedMember && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 lg:hidden">
+          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <div className="p-4 border-b border-zinc-900 flex justify-between items-center bg-zinc-900/40">
+              <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Member Details</span>
+              <button
+                onClick={() => setSelectedMember(null)}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-5">
+              <div className="flex items-center space-x-3 pb-4 border-b border-zinc-900">
+                <img
+                  src={selectedMember.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100'}
+                  alt={selectedMember.name}
+                  className="w-12 h-12 rounded-full border border-zinc-800 object-cover"
+                />
+                <div>
+                  <h3 className="font-bold text-base text-white">{selectedMember.name}</h3>
+                  <p className="text-xs text-zinc-500">{selectedMember.userId} | {selectedMember.allianzaId || 'No Allianza ID'}</p>
+                </div>
+              </div>
+
+              {/* Member stats */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/50">
+                  <p className="text-[10px] text-zinc-500 uppercase font-semibold">Rank</p>
+                  <p className="text-sm font-bold text-amber-400 mt-0.5">{selectedMember.rank || 'Associate'}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/50">
+                  <p className="text-[10px] text-zinc-500 uppercase font-semibold">Status</p>
+                  <p className="text-sm font-bold text-emerald-400 capitalize mt-0.5">{selectedMember.status || 'active'}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/50">
+                  <p className="text-[10px] text-zinc-500 uppercase font-semibold">Left BV</p>
+                  <p className="text-sm font-bold text-zinc-200 font-mono mt-0.5">{(selectedMember.leftBV || 0).toLocaleString()}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/50">
+                  <p className="text-[10px] text-zinc-500 uppercase font-semibold">Right BV</p>
+                  <p className="text-sm font-bold text-zinc-200 font-mono mt-0.5">{(selectedMember.rightBV || 0).toLocaleString()}</p>
+                </div>
+              </div>
+
+              {/* Descendant count */}
+              {(() => {
+                const desc = countDescendants(selectedMember.userId, userMap);
+                return desc > 0 ? (
+                  <div className="p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20 flex items-center gap-3">
+                    <Users size={18} className="text-emerald-400 shrink-0" />
+                    <div>
+                      <p className="text-xs text-zinc-500">Total team under this member</p>
+                      <p className="text-lg font-extrabold text-emerald-400">{desc} members</p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-xs text-zinc-600 text-center py-2">No members under this person yet.</p>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
 
       <AddMemberModal
         isOpen={isAddMemberOpen}
