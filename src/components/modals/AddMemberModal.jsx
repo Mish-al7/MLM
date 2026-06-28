@@ -198,14 +198,14 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
               type="button" 
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 rounded-lg font-semibold text-sm text-zinc-400 hover:text-white transition-colors"
+              className="px-4 py-2.5 rounded-xl font-semibold text-sm text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={loading}
-              className="px-5 py-2 rounded-lg font-bold text-sm bg-amber-500 text-black hover:opacity-90 transition-opacity disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl font-semibold text-sm bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
             >
               {loading ? 'Adding...' : 'Add Member'}
             </button>

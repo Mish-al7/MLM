@@ -292,15 +292,14 @@ export default function AdminAchievementsClient({ initialUsers, currentUser, ini
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-2">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white font-heading flex items-center gap-2">
-            <Trophy className="text-amber-500" />
+          <h1 className="text-xl font-bold text-white font-heading flex items-center gap-2">
             <span>Achievements & Prizes Registry</span>
           </h1>
-          <p className="text-zinc-400 text-xs mt-1">
+          <p className="text-zinc-400 text-xs mt-0.5">
             Award milestones, configure program ranks dynamically, and select qualifying prizes.
           </p>
         </div>
@@ -475,9 +474,9 @@ export default function AdminAchievementsClient({ initialUsers, currentUser, ini
               <button
                 type="submit"
                 disabled={rankLoading}
-                className="w-full bg-amber-500 hover:bg-amber-600 text-black py-2 rounded text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50 mt-3"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-3 shadow-sm shadow-blue-500/10"
               >
-                <Save size={12} />
+                <Save size={13} strokeWidth={2.5} />
                 <span>{rankLoading ? 'Saving...' : editingRankId ? 'Update Milestone' : 'Create Milestone'}</span>
               </button>
             </form>
@@ -768,10 +767,10 @@ export default function AdminAchievementsClient({ initialUsers, currentUser, ini
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-amber-500 hover:bg-amber-600 text-black py-2.5 rounded-lg text-xs font-bold transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50 mt-4"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl text-xs font-semibold transition-all shadow-sm shadow-blue-500/10 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 mt-4"
             >
               <span>{loading ? 'Submitting...' : 'Save Achievement'}</span>
-              <ArrowRight size={14} />
+              <ArrowRight size={14} strokeWidth={2.5} />
             </button>
           </form>
         </div>

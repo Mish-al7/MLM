@@ -12,8 +12,6 @@ export default function Home() {
   const [authPassword, setAuthPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [authSuccess, setAuthSuccess] = useState('');
-  const [demoRoleLoading, setDemoRoleLoading] = useState(false);
-  const [seedMessage, setSeedMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   // Auth: Credentials Login
@@ -38,52 +36,6 @@ export default function Home() {
       }
     } catch (err) {
       setAuthError('Connection error.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Demo Bypass Login: Switch roles instantly
-  const handleDemoLogin = async (role) => {
-    setDemoRoleLoading(true);
-    setAuthError('');
-    setAuthSuccess('');
-    try {
-      const res = await fetch('/api/auth/demo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role })
-      });
-      const json = await res.json();
-      if (res.ok) {
-        router.push(json.user.role === 'super_admin' ? '/admin' : '/member');
-      } else {
-        setAuthError(json.error || 'Failed to switch demo role. Please run Seeding first.');
-        if (json.error?.includes('seed')) {
-          setSeedMessage('Please click the "Seed Initial Data" button first to populate members.');
-        }
-      }
-    } catch (err) {
-      setAuthError('Bypass login failed.');
-    } finally {
-      setDemoRoleLoading(false);
-    }
-  };
-
-  // Trigger Database Seed
-  const handleSeed = async () => {
-    setLoading(true);
-    setSeedMessage('');
-    try {
-      const res = await fetch('/api/dev/seed');
-      const json = await res.json();
-      if (res.ok) {
-        setSeedMessage('Database seeded successfully! Try logging in or switching roles.');
-      } else {
-        setSeedMessage(json.error || 'Seed failed.');
-      }
-    } catch (err) {
-      setSeedMessage('Error seeding database.');
     } finally {
       setLoading(false);
     }
@@ -148,39 +100,7 @@ export default function Home() {
           </button>
         </form>
 
-        {/* Quick Demo Switcher Section */}
-        <div className="mt-8 pt-6 border-t border-zinc-100">
-          <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider text-center mb-4">Quick Testing Personas</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <button 
-              onClick={() => handleDemoLogin('super_admin')}
-              disabled={demoRoleLoading}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold text-xs transition-colors cursor-pointer"
-            >
-              <ShieldAlert size={14} />
-              <span>Super Admin</span>
-            </button>
-            <button 
-              onClick={() => handleDemoLogin('member')}
-              disabled={demoRoleLoading}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 font-semibold text-xs transition-colors cursor-pointer"
-            >
-              <Users size={14} />
-              <span>Team Member</span>
-            </button>
-          </div>
-          
-          <div className="mt-4 text-center">
-            <button 
-              onClick={handleSeed}
-              disabled={loading}
-              className="text-[11px] text-zinc-400 hover:text-blue-600 transition-colors underline disabled:opacity-50 cursor-pointer"
-            >
-              Seed Initial Demo Database Tree (Ranks, Users, Events)
-            </button>
-            {seedMessage && <p className="mt-2 text-xs text-blue-600 font-medium">{seedMessage}</p>}
-          </div>
-        </div>
+
       </div>
     </div>
   );

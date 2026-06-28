@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Award, Calendar, Users, Plus, Eye, CheckCircle, XCircle, Download, X } from 'lucide-react';
+import PageHeader from '@/components/shared/PageHeader';
 import AddEventModal from '@/components/modals/AddEventModal';
 
 export default function AdminEventsClient({ initialEvents }) {
@@ -67,54 +68,63 @@ export default function AdminEventsClient({ initialEvents }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-white font-heading">Event Management</h1>
-          <p className="text-zinc-400 text-xs mt-1">Create events, set eligibility criteria, and manage participant approvals.</p>
-        </div>
-        <button 
-          onClick={() => setIsAddEventOpen(true)}
-          className="flex items-center gap-1.5 bg-amber-500 text-black px-4 py-2 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
-        >
-          <Plus size={16} />
-          <span>Create New Event</span>
-        </button>
-      </div>
+      <PageHeader
+        title="Event Management"
+        subtitle="Create events, set eligibility criteria, and manage participant approvals."
+        actions={
+          <button
+            onClick={() => setIsAddEventOpen(true)}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10"
+          >
+            <Plus size={15} strokeWidth={2.5} />
+            <span>Create New Event</span>
+          </button>
+        }
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {events.map(item => (
-          <div key={item._id} className="p-4 rounded-xl glass-panel border border-zinc-800 flex flex-col justify-between">
-            <div>
-              <div className="flex justify-between items-start">
-                <h4 className="font-bold text-lg text-white">{item.name}</h4>
-                <Award className="text-amber-500" size={20} />
+          <div key={item._id} className="bg-white rounded-2xl border border-slate-100 flex flex-col justify-between overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-shadow">
+            {item.bannerImage && (
+              <div className="h-36 w-full border-b border-slate-100 overflow-hidden">
+                <img src={item.bannerImage} alt={item.name} className="w-full h-full object-cover" />
               </div>
-              <p className="text-xs text-zinc-400 mt-2 flex items-center gap-2">
-                <Calendar size={14} /> {new Date(item.date).toLocaleDateString()}
-              </p>
-              {item.venue && (
-                <p className="text-xs text-zinc-500 mt-1">📍 {item.venue}</p>
-              )}
-              <p className="text-xs text-zinc-400 mt-1 flex items-center gap-2">
-                <Users size={14} /> Max: {item.maxParticipants || 'Unlimited'}
-              </p>
-              <div className="mt-4 p-3 bg-zinc-900 rounded-lg">
-                <p className="text-[10px] text-zinc-500 uppercase font-semibold">Eligibility Requirements</p>
-                <div className="flex justify-between mt-1 text-sm font-mono text-zinc-300">
-                  <span>Left BV: {item.minLeftBV}</span>
-                  <span>Right BV: {item.minRightBV}</span>
+            )}
+            <div className="p-5 flex flex-col flex-1 justify-between">
+              <div>
+                <div className="flex justify-between items-start gap-2">
+                  <h4 className="font-bold text-base text-slate-800 leading-snug">{item.name}</h4>
+                  <Award className="text-blue-500 flex-shrink-0 mt-0.5" size={16} />
+                </div>
+                <div className="space-y-1.5 mt-3">
+                  <p className="text-xs text-slate-400 flex items-center gap-1.5">
+                    <Calendar size={13} /> {new Date(item.date).toLocaleDateString()}
+                  </p>
+                  {item.venue && (
+                    <p className="text-xs text-slate-500">📍 {item.venue}</p>
+                  )}
+                  <p className="text-xs text-slate-400 flex items-center gap-1.5">
+                    <Users size={13} /> Max: {item.maxParticipants || 'Unlimited'}
+                  </p>
+                </div>
+                <div className="mt-4 p-3 bg-slate-50 border border-slate-100 rounded-xl">
+                  <p className="text-[10px] text-slate-400 uppercase font-semibold">Eligibility Requirements</p>
+                  <div className="flex justify-between mt-1 text-xs font-mono text-slate-600">
+                    <span>Left: {item.minLeftBV} BV</span>
+                    <span>Right: {item.minRightBV} BV</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="mt-4 pt-4 border-t border-zinc-900 flex justify-between items-center">
-              <span className="text-sm font-semibold text-zinc-300">₹{item.ticketPrice}</span>
-              <button 
-                onClick={() => handleViewRegistrations(item)}
-                className="flex items-center gap-1.5 text-xs font-semibold text-amber-500 hover:text-white transition-colors"
-              >
-                <Eye size={14} />
-                View Registrations
-              </button>
+              <div className="mt-5 pt-4 border-t border-slate-100 flex justify-between items-center">
+                <span className="text-sm font-bold text-slate-800">₹{item.ticketPrice}</span>
+                <button 
+                  onClick={() => handleViewRegistrations(item)}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  <Eye size={14} />
+                  View Registrations
+                </button>
+              </div>
             </div>
           </div>
         ))}

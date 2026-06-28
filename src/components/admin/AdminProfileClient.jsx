@@ -61,8 +61,8 @@ export default function AdminProfileClient({ currentUser }) {
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-white font-heading">Admin Profile</h1>
-          <p className="text-zinc-400 text-xs mt-1">View and update your administrator credentials and profile details.</p>
+          <h1 className="text-xl font-bold text-white font-heading">Admin Profile</h1>
+          <p className="text-zinc-400 text-xs mt-0.5">View and update your administrator credentials and profile details.</p>
         </div>
         {!isEditing && (
           <button

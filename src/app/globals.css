@@ -49,18 +49,18 @@ body {
   background-attachment: fixed;
 }
 
-/* Glassmorphism Styles for Light Theme */
+/* Clean Slate Card Styles */
 .glass-panel {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.04);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-panel-hover:hover {
-  border-color: rgba(37, 99, 235, 0.2);
-  box-shadow: 0 8px 30px 0 rgba(37, 99, 235, 0.08);
-  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.15);
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.06);
+  transform: translateY(-1px);
 }
 
 /* Blue Theme Utilities (formerly Gold) */

@@ -254,11 +254,10 @@ export default function AdminReportsClient({ users, currentUser }) {
       {/* Page Header Title */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white font-heading flex items-center gap-2">
-            <FileText className="text-amber-500" />
+          <h1 className="text-xl font-bold text-white font-heading flex items-center gap-2">
             <span>Reports & Exports Portal</span>
           </h1>
-          <p className="text-zinc-400 text-xs mt-1">
+          <p className="text-zinc-400 text-xs mt-0.5">
             Generate, analyze, and export hierarchy organizational values or birthday calendar tables in PDF/CSV format.
           </p>
         </div>
@@ -274,7 +273,7 @@ export default function AdminReportsClient({ users, currentUser }) {
           </button>
           <button
             onClick={handleExportPDF}
-            className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer shadow-md shadow-amber-500/10"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs transition-colors shadow-sm shadow-blue-500/10 cursor-pointer"
           >
             <FileDown size={14} />
             <span>Export PDF</span>

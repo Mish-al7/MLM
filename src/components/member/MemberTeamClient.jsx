@@ -134,17 +134,17 @@ export default function MemberTeamClient({ currentUser, allMembers }) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white font-heading">My Team</h1>
-          <p className="text-zinc-400 text-xs mt-1">
+          <h1 className="text-xl font-bold text-white font-heading">My Team</h1>
+          <p className="text-zinc-400 text-xs mt-0.5">
             Members you have added under your network
           </p>
         </div>
         <button
           onClick={() => setIsAddOpen(true)}
-          className="flex items-center gap-2 bg-amber-500 text-black px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10"
         >
-          <Plus size={16} />
-          Add Member
+          <Plus size={15} strokeWidth={2.5} />
+          <span>Add Member</span>
         </button>
       </div>
 

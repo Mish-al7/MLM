@@ -147,8 +147,8 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-white font-heading">Organizational Hierarchy Tree</h1>
-          <p className="text-zinc-400 text-xs mt-1">
+          <h1 className="text-xl font-bold text-white font-heading">Organizational Hierarchy Tree</h1>
+          <p className="text-zinc-400 text-xs mt-0.5">
             Collapsible tree. Numbers show total members under each person.
           </p>
         </div>
@@ -177,9 +177,9 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
 
           <button
             onClick={() => setIsAddMemberOpen(true)}
-            className="flex items-center gap-1.5 bg-amber-500 text-black px-4 py-2 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10"
           >
-            <Plus size={16} />
+            <Plus size={15} strokeWidth={2.5} />
             <span>Add Member</span>
           </button>
         </div>

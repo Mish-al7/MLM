@@ -14,6 +14,7 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
     maxParticipants: '',
     minLeftBV: 0,
     minRightBV: 0,
+    bannerImage: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -49,6 +50,7 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
           maxParticipants: '',
           minLeftBV: 0,
           minRightBV: 0,
+          bannerImage: '',
         });
       } else {
         setError(json.error || 'Failed to create event.');
@@ -103,6 +105,30 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
               placeholder="Details about the event..."
             />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Banner Image URL</label>
+            <input 
+              type="text" 
+              name="bannerImage"
+              value={formData.bannerImage || ''}
+              onChange={handleChange}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
+              placeholder="e.g. https://images.unsplash.com/photo-..."
+            />
+            {formData.bannerImage && (
+              <div className="mt-3 relative rounded-xl overflow-hidden border border-zinc-800 max-h-32 bg-zinc-900 flex items-center justify-center">
+                <img 
+                  src={formData.bannerImage} 
+                  alt="Banner Preview" 
+                  className="w-full h-full object-cover max-h-32"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -203,14 +229,14 @@ export default function AddEventModal({ isOpen, onClose, onSuccess }) {
               type="button" 
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 rounded-lg font-semibold text-sm text-zinc-400 hover:text-white transition-colors"
+              className="px-4 py-2.5 rounded-xl font-semibold text-sm text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={loading}
-              className="px-5 py-2 rounded-lg font-bold text-sm bg-amber-500 text-black hover:opacity-90 transition-opacity disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl font-semibold text-sm bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
             >
               {loading ? 'Creating...' : 'Create Event'}
             </button>
