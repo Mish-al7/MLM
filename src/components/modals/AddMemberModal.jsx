@@ -136,7 +136,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Allianza ID *</label>
+              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Tez ID *</label>
               <input 
                 type="text" 
                 name="allianzaId"
@@ -144,7 +144,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
                 value={formData.allianzaId}
                 onChange={handleChange}
                 className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 transition-colors"
-                placeholder="Enter Allianza ID"
+                placeholder="Enter Tez ID"
               />
             </div>
             <div>

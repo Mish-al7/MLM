@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { 
   TrendingUp, Calendar as CalendarIcon, Cake, Phone, 
   Users, UsersRound, Volume2, Star, Award as AwardIcon, 
-  Trophy, Compass, Car, ChevronRight, ArrowUpRight
+  Trophy, Compass, Car, ChevronRight, ArrowUpRight, Crown, Gem, Megaphone, Image as ImageIcon
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -16,8 +16,8 @@ const getRankIcon = (iconName) => {
     case 'Award':   return <AwardIcon {...props} />;
     case 'Compass': return <Compass {...props} />;
     case 'MapPin':  return <Compass {...props} />;
-    case 'Trophy':  return <Trophy {...props} />;
-    case 'Car':     return <Car {...props} />;
+    case 'Trophy':  return <Gem {...props} />;
+    case 'Car':     return <Crown {...props} />;
     default:        return <AwardIcon {...props} />;
   }
 };
@@ -27,25 +27,21 @@ const STAT_CARDS = (membersCount, referralsCount, eventsCount, updatesCount) => 
     label: 'Total team size',
     value: membersCount,
     icon: Users,
-    color: 'bg-blue-50 text-blue-600',
   },
   {
     label: 'Direct referrals',
     value: referralsCount,
-    icon: UsersRound,
-    color: 'bg-indigo-50 text-indigo-600',
+    icon: Users,
   },
   {
     label: 'Upcoming programs',
     value: eventsCount,
     icon: CalendarIcon,
-    color: 'bg-violet-50 text-violet-600',
   },
   {
     label: 'Announcements',
     value: updatesCount,
-    icon: Volume2,
-    color: 'bg-sky-50 text-sky-600',
+    icon: Megaphone,
   },
 ];
 
@@ -141,6 +137,15 @@ export default function AdminDashboardClient({
           <p className="text-sm text-slate-400 mt-0.5">Here's what's happening with your team today.</p>
         </div>
 
+        {/* Small button to redirect to dashboard banners */}
+        <Link
+          href="/admin/banners"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-blue-600 text-white transition-colors shrink-0"
+        >
+          <ImageIcon size={13} />
+          <span>Manage Banners</span>
+        </Link>
+
         {/* Compact birthday toast — only if birthdays exist */}
         {hasBirthdays && (
           <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-100 shrink-0 shadow-sm">
@@ -179,8 +184,8 @@ export default function AdminDashboardClient({
               key={card.label}
               className="bg-white rounded-2xl border border-slate-100 p-5 flex items-center gap-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.07)] transition-shadow"
             >
-              <div className={`p-2.5 rounded-xl flex-shrink-0 ${card.color}`}>
-                <Icon size={18} strokeWidth={1.75} />
+              <div className="w-8 h-8 rounded-full bg-[#0A1E3D] flex items-center justify-center flex-shrink-0">
+                <Icon size={16} strokeWidth={0} fill="currentColor" className="text-white fill-current w-4 h-4 flex-shrink-0" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-slate-400 font-medium leading-tight">{card.label}</p>

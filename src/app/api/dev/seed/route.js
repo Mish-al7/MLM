@@ -9,6 +9,8 @@ import Update from '@/models/Update';
 import Document from '@/models/Document';
 import Media from '@/models/Media';
 import Rank from '@/models/Rank';
+import RoyalKingsClub from '@/models/RoyalKingsClub';
+import DashboardBanner from '@/models/DashboardBanner';
 import { hashPassword } from '@/lib/auth';
 
 export async function GET() {
@@ -25,6 +27,8 @@ export async function GET() {
     await Document.deleteMany({});
     await Media.deleteMany({});
     await Rank.deleteMany({});
+    await RoyalKingsClub.deleteMany({});
+    await DashboardBanner.deleteMany({});
 
     // 2. Create Members Hierarchy
     const localTimeStr = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
@@ -312,6 +316,69 @@ export async function GET() {
       { name: 'Crown', reward: 'Lexus ES', target: 'Left & Right BV > 150,000', targetLeftBv: 150000, targetRightBv: 150000, iconName: 'Car' }
     ];
     await Rank.insertMany(ranks);
+
+    // 9. Seed Royal Kings Club
+    await RoyalKingsClub.create({
+      bannerUrl: 'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=1600&auto=format&fit=crop',
+      members: [
+        {
+          name: 'Aravind Menon',
+          title: 'Crown Diamond Leader',
+          portraitUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop',
+          order: 1,
+        },
+        {
+          name: 'Megha Joshi',
+          title: 'Diamond Leader',
+          portraitUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop',
+          order: 2,
+        },
+        {
+          name: 'Priya Nair',
+          title: 'Platinum Leader',
+          portraitUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop',
+          order: 3,
+        },
+        {
+          name: 'Anjali Kumar',
+          title: 'Gold Leader',
+          portraitUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=400&auto=format&fit=crop',
+          order: 4,
+        },
+        {
+          name: 'Rohit Sharma',
+          title: 'Rising Star',
+          portraitUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop',
+          order: 5,
+        },
+        {
+          name: 'Kavya Pillai',
+          title: 'Platinum Achiever',
+          portraitUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=400&auto=format&fit=crop',
+          order: 6,
+        },
+        {
+          name: 'Arjun Nambiar',
+          title: 'Gold Achiever',
+          portraitUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop',
+          order: 7,
+        },
+        {
+          name: 'Sneha Rajan',
+          title: 'Silver Star',
+          portraitUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400&auto=format&fit=crop',
+          order: 8,
+        },
+      ],
+    });
+
+    // 10. Seed Dashboard Banners
+    await DashboardBanner.create({
+      banners: [
+        { id: 1, imageUrl: 'https://images.unsplash.com/photo-1542744173-8e0856d116db?q=80&w=800&auto=format&fit=crop', altText: 'Banner Slot 1' },
+        { id: 2, imageUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800&auto=format&fit=crop', altText: 'Banner Slot 2' }
+      ]
+    });
 
     return NextResponse.json({ 
       success: true, 

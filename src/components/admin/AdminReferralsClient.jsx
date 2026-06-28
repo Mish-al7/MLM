@@ -380,7 +380,7 @@ export default function AdminReferralsClient({ currentUser, allMembers }) {
         </div>
         <button
           onClick={() => setIsAddOpen(true)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10 shrink-0"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10 whitespace-nowrap shrink-0"
         >
           <UserPlus size={15} strokeWidth={2.5} />
           <span>Add Referral</span>

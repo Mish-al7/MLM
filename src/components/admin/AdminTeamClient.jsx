@@ -177,7 +177,7 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
 
           <button
             onClick={() => setIsAddMemberOpen(true)}
-            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10 w-full sm:w-auto"
+            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10 w-full sm:w-auto whitespace-nowrap shrink-0"
           >
             <Plus size={15} strokeWidth={2.5} />
             <span>Add Member</span>
@@ -225,7 +225,7 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
                 />
                 <div>
                   <h3 className="font-bold text-base text-white">{selectedMember.name}</h3>
-                  <p className="text-xs text-zinc-500">{selectedMember.userId} | {selectedMember.allianzaId || 'No Allianza ID'}</p>
+                  <p className="text-xs text-zinc-500">{selectedMember.userId} | {selectedMember.allianzaId || 'No Tez ID'}</p>
                 </div>
               </div>
 
@@ -241,11 +241,11 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
                 </div>
                 <div className="p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/50">
                   <p className="text-[10px] text-zinc-500 uppercase font-semibold">Left BV</p>
-                  <p className="text-sm font-bold text-zinc-200 font-mono mt-0.5">{(selectedMember.leftBV || 0).toLocaleString()}</p>
+                  <p className="text-sm font-bold text-amber-600 font-mono mt-0.5">{(selectedMember.leftBV || 0).toLocaleString()}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/50">
                   <p className="text-[10px] text-zinc-500 uppercase font-semibold">Right BV</p>
-                  <p className="text-sm font-bold text-zinc-200 font-mono mt-0.5">{(selectedMember.rightBV || 0).toLocaleString()}</p>
+                  <p className="text-sm font-bold text-cyan-600 font-mono mt-0.5">{(selectedMember.rightBV || 0).toLocaleString()}</p>
                 </div>
               </div>
 
@@ -299,7 +299,7 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
                 />
                 <div>
                   <h3 className="font-bold text-base text-white">{selectedMember.name}</h3>
-                  <p className="text-xs text-zinc-500">{selectedMember.userId} | {selectedMember.allianzaId || 'No Allianza ID'}</p>
+                  <p className="text-xs text-zinc-500">{selectedMember.userId} | {selectedMember.allianzaId || 'No Tez ID'}</p>
                 </div>
               </div>
 
@@ -315,11 +315,11 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
                 </div>
                 <div className="p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/50">
                   <p className="text-[10px] text-zinc-500 uppercase font-semibold">Left BV</p>
-                  <p className="text-sm font-bold text-zinc-200 font-mono mt-0.5">{(selectedMember.leftBV || 0).toLocaleString()}</p>
+                  <p className="text-sm font-bold text-amber-600 font-mono mt-0.5">{(selectedMember.leftBV || 0).toLocaleString()}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/50">
                   <p className="text-[10px] text-zinc-500 uppercase font-semibold">Right BV</p>
-                  <p className="text-sm font-bold text-zinc-200 font-mono mt-0.5">{(selectedMember.rightBV || 0).toLocaleString()}</p>
+                  <p className="text-sm font-bold text-cyan-600 font-mono mt-0.5">{(selectedMember.rightBV || 0).toLocaleString()}</p>
                 </div>
               </div>
 

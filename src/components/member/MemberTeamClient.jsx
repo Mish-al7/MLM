@@ -159,7 +159,7 @@ export default function MemberTeamClient({ currentUser, allMembers }) {
         </div>
         <button
           onClick={() => setIsAddOpen(true)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10 whitespace-nowrap shrink-0"
         >
           <Plus size={15} strokeWidth={2.5} />
           <span>Add Member</span>
@@ -170,7 +170,7 @@ export default function MemberTeamClient({ currentUser, allMembers }) {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div className="glass-panel border border-zinc-800 rounded-xl p-5">
           <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold">Direct Members</p>
-          <p className="text-3xl font-extrabold text-white mt-1 font-mono">{directChildren.length}</p>
+          <p className="text-3xl font-extrabold text-[#001B3A] mt-1 font-mono">{directChildren.length}</p>
           <p className="text-xs text-zinc-600 mt-1">Reporting to you</p>
         </div>
         <div className="glass-panel border border-zinc-800 rounded-xl p-5">

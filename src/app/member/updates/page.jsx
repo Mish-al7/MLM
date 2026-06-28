@@ -15,34 +15,34 @@ export default async function MemberUpdatesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white font-heading">Quick Announcements</h1>
-        <p className="text-zinc-400 text-xs mt-1">Important notices and reminders.</p>
+        <h1 className="text-xl font-bold text-[#001B3A] font-heading uppercase tracking-wider">Quick Announcements</h1>
+        <p className="text-slate-500 text-xs mt-1">Important notices and reminders.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
         {updatesList.map(item => (
-          <div key={item._id.toString()} className="p-4 rounded-xl glass-panel border border-zinc-800 flex items-start gap-4">
-            <div className="p-3 bg-zinc-900 rounded-lg">
-              <Bell className="text-amber-500" size={24} />
+          <div key={item._id.toString()} className="p-5 rounded-2xl bg-white border border-slate-100 flex items-start gap-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            <div className="p-3 bg-amber-50 rounded-xl">
+              <Bell className="text-amber-600" size={20} />
             </div>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] bg-amber-500/10 text-amber-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
                   {item.type}
                 </span>
-                <span className="text-xs text-zinc-500">
+                <span className="text-xs text-slate-400">
                   {new Date(item.createdAt).toLocaleString()}
                 </span>
               </div>
-              <p className="text-sm text-zinc-200 mt-2">{item.content}</p>
+              <p className="text-sm text-slate-750 mt-2 font-medium text-slate-700">{item.content}</p>
             </div>
           </div>
         ))}
 
         {updatesList.length === 0 && (
-          <div className="p-8 text-center text-zinc-600 border border-dashed border-zinc-800 rounded-xl glass-panel">
-            <Bell size={40} className="mx-auto mb-4 text-zinc-700" />
-            <p>No announcements right now.</p>
+          <div className="p-10 text-center text-slate-400 border border-dashed border-slate-200 rounded-2xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            <Bell size={40} className="mx-auto mb-4 text-slate-300" />
+            <p className="text-sm">No announcements right now.</p>
           </div>
         )}
       </div>

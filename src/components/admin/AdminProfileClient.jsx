@@ -14,6 +14,7 @@ export default function AdminProfileClient({ currentUser }) {
   const [name, setName] = useState(currentUser.name || '');
   const [email, setEmail] = useState(currentUser.email || '');
   const [phone, setPhone] = useState(currentUser.phone || '');
+  const [phone2, setPhone2] = useState(currentUser.phone2 || '');
   const [avatar, setAvatar] = useState(currentUser.avatar || '');
   const [dob, setDob] = useState(currentUser.dob ? new Date(currentUser.dob).toISOString().split('T')[0] : '');
   const [password, setPassword] = useState('');
@@ -32,6 +33,7 @@ export default function AdminProfileClient({ currentUser }) {
           name,
           email,
           phone,
+          phone2,
           avatar,
           dob,
           ...(password ? { password } : {})
@@ -124,7 +126,7 @@ export default function AdminProfileClient({ currentUser }) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Phone Number</label>
+                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Primary Phone Number</label>
                   <input
                     type="text"
                     value={phone}
@@ -134,13 +136,45 @@ export default function AdminProfileClient({ currentUser }) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Avatar Image URL</label>
+                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Secondary Phone Number</label>
                   <input
                     type="text"
-                    value={avatar}
-                    onChange={(e) => setAvatar(e.target.value)}
+                    value={phone2}
+                    onChange={(e) => setPhone2(e.target.value)}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
                   />
+                </div>
+
+                <div className="space-y-1.5 flex flex-col justify-end">
+                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Avatar Image</label>
+                  <label className="bg-[#0A1E3D] hover:bg-[#001B3A] text-white px-4 py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-colors w-full border border-[#C5A059]/30">
+                    <span>Upload New Photo</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        try {
+                          const res = await fetch('/api/upload', {
+                            method: 'POST',
+                            body: formData
+                          });
+                          const json = await res.json();
+                          if (res.ok && json.url) {
+                            setAvatar(json.url);
+                          } else {
+                            alert(json.error || 'Upload failed');
+                          }
+                        } catch (err) {
+                          alert('Upload failed');
+                        }
+                      }}
+                      className="hidden"
+                    />
+                  </label>
                 </div>
 
                 <div className="space-y-1.5">
@@ -174,6 +208,7 @@ export default function AdminProfileClient({ currentUser }) {
                   setName(currentUser.name);
                   setEmail(currentUser.email);
                   setPhone(currentUser.phone || '');
+                  setPhone2(currentUser.phone2 || '');
                   setAvatar(currentUser.avatar || '');
                   setDob(currentUser.dob ? new Date(currentUser.dob).toISOString().split('T')[0] : '');
                   setPassword('');
@@ -225,8 +260,10 @@ export default function AdminProfileClient({ currentUser }) {
                 <div className="flex items-center gap-3 p-3 bg-zinc-900/50 rounded-lg border border-zinc-800/50">
                   <Phone className="text-zinc-500" size={16} />
                   <div className="min-w-0">
-                    <p className="text-[10px] text-zinc-500 uppercase font-semibold">Phone Number</p>
-                    <p className="text-sm text-zinc-300">{currentUser.phone || 'Not provided'}</p>
+                    <p className="text-[10px] text-zinc-500 uppercase font-semibold">Contact Numbers</p>
+                    <p className="text-sm text-zinc-300">
+                      {currentUser.phone || 'N/A'}{currentUser.phone2 ? ` / ${currentUser.phone2}` : ''}
+                    </p>
                   </div>
                 </div>
 

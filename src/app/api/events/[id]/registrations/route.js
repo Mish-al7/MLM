@@ -51,7 +51,7 @@ export async function GET(req, { params }) {
       const excelRows = enrichedData.map(item => ({
         'Member Name': item.name,
         'User ID': item.userId,
-        'Allianza ID': item.allianzaId,
+        'Tez ID': item.allianzaId,
         'Phone Number': item.phone,
         'Leader': item.mainLeader,
         'Left BV': item.leftBV,
@@ -70,7 +70,7 @@ export async function GET(req, { params }) {
       const wscols = [
         { wch: 20 }, // Member Name
         { wch: 12 }, // User ID
-        { wch: 12 }, // Allianza ID
+        { wch: 12 }, // Tez ID
         { wch: 15 }, // Phone Number
         { wch: 20 }, // Leader
         { wch: 10 }, // Left BV

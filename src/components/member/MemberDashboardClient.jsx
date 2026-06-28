@@ -1,14 +1,16 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { 
   Award, Edit2, TrendingUp, DollarSign, Calendar as CalendarIcon, 
   MapPin, CheckCircle, Flame, ShieldAlert, Navigation, ArrowUpRight 
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-export default function MemberDashboardClient({ initialUser, allRanks }) {
+export default function MemberDashboardClient({ initialUser, allRanks, initialBanners, adminContacts = [] }) {
   const [user, setUser] = useState(initialUser);
+  const [banners, setBanners] = useState(initialBanners || []);
   const [editMode, setEditMode] = useState(false);
   const [leftBV, setLeftBV] = useState(user.leftBV || 0);
   const [rightBV, setRightBV] = useState(user.rightBV || 0);
@@ -167,8 +169,8 @@ export default function MemberDashboardClient({ initialUser, allRanks }) {
             <h3 className="text-lg font-bold text-zinc-200 mt-0.5 uppercase tracking-wide">{user.rank || 'Associate'}</h3>
             <p className="text-[10px] text-amber-500 mt-0.5 font-semibold">Reward: {user.reward || 'None'}</p>
           </div>
-          <div className="p-1.5 bg-zinc-900 rounded-lg text-amber-500 shrink-0">
-            <Award size={16} />
+          <div className="w-8 h-8 rounded-full bg-[#0A1E3D] flex items-center justify-center flex-shrink-0">
+            <Award size={16} strokeWidth={0} fill="currentColor" className="text-white fill-current w-4 h-4 flex-shrink-0" />
           </div>
         </div>
       </div>
@@ -201,152 +203,63 @@ export default function MemberDashboardClient({ initialUser, allRanks }) {
         )}
       </div>
 
-      {/* Dynamic Graph Trend and Milestone Progress Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-        {/* Left Card: BV Growth Audit Line Chart */}
-        <div className="p-6 rounded-2xl border border-zinc-800 bg-zinc-950/40 space-y-4">
-          <div className="flex justify-between items-center border-b border-zinc-900 pb-3">
-            <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
-              <TrendingUp className="text-amber-500" size={16} />
-              <span>BV Progression History</span>
-            </h3>
-            <div className="flex items-center gap-4 text-[9px] font-mono">
-              <span className="flex items-center gap-1 text-amber-500">
-                <span className="w-2.5 h-0.5 bg-amber-500 inline-block" /> Left
-              </span>
-              <span className="flex items-center gap-1 text-cyan-400">
-                <span className="w-2.5 h-0.5 bg-cyan-400 inline-block" /> Right
-              </span>
+      {/* Dual Banner Display Grid replacing Chart and Milestone cards */}
+      {banners.filter(b => b.imageUrl).length > 0 && (
+        <div className={`grid gap-6 w-full ${
+          banners.filter(b => b.imageUrl).length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'
+        }`}>
+          {banners.filter(b => b.imageUrl).map((b) => (
+            <div key={b.id} className="relative h-72 md:h-96 w-full rounded-xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
+              <Image
+                src={b.imageUrl}
+                alt={b.altText || `Promotional Banner ${b.id}`}
+                fill
+                className="object-cover"
+                sizes={banners.filter(b => b.imageUrl).length === 2 ? "(max-width: 768px) 100vw, 50vw" : "100vw"}
+                priority
+                unoptimized
+              />
             </div>
-          </div>
-
-          <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-44 mt-2">
-            {/* Y Axis Grid lines */}
-            {[0, 0.5, 1].map((ratio, idx) => {
-              const y = paddingTop + ratio * chartHeight;
-              return (
-                <line key={idx} x1={paddingLeft} y1={y} x2={width - paddingRight} y2={y} stroke="#1e1e1e" strokeWidth={1} strokeDasharray="3,3" />
-              );
-            })}
-            
-            {/* Left BV Line */}
-            {leftPoints.length > 0 && (
-              <path d={leftPathD} fill="none" stroke="#f59e0b" strokeWidth={2} />
-            )}
-            
-            {/* Right BV Line */}
-            {rightPoints.length > 0 && (
-              <path d={rightPathD} fill="none" stroke="#22d3ee" strokeWidth={2} />
-            )}
-            
-            {/* Left BV node circles and values */}
-            {leftPoints.map((p, idx) => (
-              <g key={`l-${idx}`}>
-                <circle cx={p.x} cy={p.y} r={3} fill="#09090b" stroke="#f59e0b" strokeWidth={1.5} />
-                <text x={p.x} y={p.y - 7} fill="#f59e0b" fontSize={8} fontWeight="semibold" textAnchor="middle">{p.val.toLocaleString()}</text>
-              </g>
-            ))}
-
-            {/* Right BV node circles and values */}
-            {rightPoints.map((p, idx) => (
-              <g key={`r-${idx}`}>
-                <circle cx={p.x} cy={p.y} r={3} fill="#09090b" stroke="#22d3ee" strokeWidth={1.5} />
-                <text x={p.x} y={p.y + 11} fill="#22d3ee" fontSize={8} fontWeight="semibold" textAnchor="middle">{p.val.toLocaleString()}</text>
-              </g>
-            ))}
-
-            {/* X Axis Labels */}
-            {leftPoints.map((p, idx) => (
-              <text key={`lbl-${idx}`} x={p.x} y={height - 5} fill="#71717a" fontSize={8.5} textAnchor="middle">{p.label}</text>
-            ))}
-          </svg>
+          ))}
         </div>
+      )}
 
-        {/* Right Card: Milestone Target Upgrade Progress Bar */}
-        <div className="p-6 rounded-2xl border border-zinc-800 bg-zinc-950/40 flex flex-col justify-between">
-          <div className="border-b border-zinc-900 pb-3">
-            <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Flame className="text-amber-500 animate-pulse" size={15} />
-              <span>Next Milestone Qualification Progress</span>
-            </h3>
-            <p className="text-[10px] text-zinc-500 mt-1">Live requirements verification for leadership promotion</p>
+      {/* Admin / Support Contact Panel */}
+      {adminContacts.length > 0 && (
+        <div className="bg-white border border-slate-100 rounded-xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] space-y-4">
+          <div className="border-b border-slate-50 pb-3 flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-slate-800 font-heading uppercase tracking-wider">Support & Admin Contacts</h3>
+              <p className="text-[10px] text-slate-400 font-medium">Reach out to leadership team or administrators for support</p>
+            </div>
+            <span className="text-[10px] bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">Helpdesk</span>
           </div>
 
-          {milestoneProgress ? (
-            <div className="my-5 space-y-5">
-              <div className="flex justify-between items-center text-xs font-semibold">
-                <span className="text-zinc-400">Target Rank:</span>
-                <span className="text-amber-400 font-extrabold uppercase tracking-wider">{milestoneProgress.nextRank.name}</span>
-              </div>
-
-              {/* Progress sliders */}
-              <div className="space-y-3.5">
-                {/* Left Progress */}
-                <div className="space-y-1">
-                  <div className="flex justify-between text-[11px] font-mono">
-                    <span className="text-zinc-500">Left BV target:</span>
-                    <span className="text-amber-500 font-bold">{user.leftBV.toLocaleString()} / {milestoneProgress.nextRank.targetLeftBv.toLocaleString()} BV</span>
-                  </div>
-                  <div className="w-full h-2 bg-zinc-900 border border-zinc-850 rounded-full overflow-hidden">
-                    <div 
-                      className="bg-amber-500 h-full rounded-full transition-all duration-500" 
-                      style={{ width: `${milestoneProgress.leftProgress}%` }}
-                    />
-                  </div>
-                </div>
-
-                {/* Right Progress */}
-                <div className="space-y-1">
-                  <div className="flex justify-between text-[11px] font-mono">
-                    <span className="text-zinc-500">Right BV target:</span>
-                    <span className="text-cyan-400 font-bold">{user.rightBV.toLocaleString()} / {milestoneProgress.nextRank.targetRightBv.toLocaleString()} BV</span>
-                  </div>
-                  <div className="w-full h-2 bg-zinc-900 border border-zinc-850 rounded-full overflow-hidden">
-                    <div 
-                      className="bg-cyan-400 h-full rounded-full transition-all duration-500" 
-                      style={{ width: `${milestoneProgress.rightProgress}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Overall qualification completion card */}
-              <div className="p-3.5 rounded-xl border border-zinc-900 bg-zinc-950/30 flex justify-between items-center">
-                <div>
-                  <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">Qualification Progress</span>
-                  <p className="text-sm font-bold text-zinc-300 mt-0.5">{milestoneProgress.overallProgress}% Complete</p>
-                </div>
-                <div className="text-[10px] text-right font-semibold text-zinc-400 max-w-[170px] leading-relaxed">
-                  {milestoneProgress.remainingLeft === 0 && milestoneProgress.remainingRight === 0 ? (
-                    <span className="text-emerald-400 font-bold flex items-center gap-1">
-                      <CheckCircle size={11} /> Qualified!
-                    </span>
-                  ) : (
-                    <span>
-                      Needs {milestoneProgress.remainingLeft > 0 && `${milestoneProgress.remainingLeft.toLocaleString()} L-BV`}
-                      {milestoneProgress.remainingLeft > 0 && milestoneProgress.remainingRight > 0 && " and "}
-                      {milestoneProgress.remainingRight > 0 && `${milestoneProgress.remainingRight.toLocaleString()} R-BV`} more.
-                    </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {adminContacts.map((admin, idx) => (
+              <div key={idx} className="flex items-center gap-4 p-4 bg-slate-50/50 rounded-xl border border-slate-100/60 hover:bg-slate-50 transition-colors">
+                <img
+                  src={admin.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100'}
+                  alt={admin.name}
+                  className="w-12 h-12 rounded-full object-cover border border-slate-200 shadow-sm flex-shrink-0"
+                />
+                <div className="min-w-0 flex-1 space-y-0.5">
+                  <h4 className="text-xs font-bold text-[#001B3A] uppercase tracking-wider truncate">{admin.name}</h4>
+                  <p className="text-[10px] text-slate-500 font-medium flex items-center gap-1.5 truncate">
+                    <span className="font-semibold text-slate-400 uppercase">Email:</span> {admin.email}
+                  </p>
+                  {(admin.phone || admin.phone2) && (
+                    <p className="text-[10px] text-slate-500 font-medium flex items-center gap-1.5">
+                      <span className="font-semibold text-slate-400 uppercase">Contact:</span> 
+                      {admin.phone || 'N/A'}{admin.phone2 ? ` / ${admin.phone2}` : ''}
+                    </p>
                   )}
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="p-8 text-center text-zinc-500 italic my-auto text-xs border border-dashed border-zinc-900 rounded-xl">
-              Qualified for all milestones! You have reached the maximum rank (Crown).
-            </div>
-          )}
-
-          {/* Quick link button to achievements */}
-          <div className="p-3 rounded-lg border border-amber-500/10 bg-amber-500/5 text-[10px] text-amber-500/80 flex items-start gap-2 mt-2 leading-relaxed">
-            <Flame size={12} className="shrink-0 mt-0.5 text-amber-500" />
-            <span>Milestone qualifications are evaluated by Super Admins. Adjust your BV balance above to qualify for promotions!</span>
+            ))}
           </div>
         </div>
-
-      </div>
-
+      )}
     </div>
   );
 }

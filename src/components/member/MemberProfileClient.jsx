@@ -134,14 +134,36 @@ export default function MemberProfileClient({ currentUser }) {
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Avatar Image URL</label>
-                  <input
-                    type="text"
-                    value={avatar}
-                    onChange={(e) => setAvatar(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
-                  />
+                <div className="space-y-1.5 flex flex-col justify-end">
+                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Avatar Image</label>
+                  <label className="bg-[#0A1E3D] hover:bg-[#001B3A] text-white px-4 py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-colors w-full border border-[#C5A059]/30">
+                    <span>Upload New Photo</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        try {
+                          const res = await fetch('/api/upload', {
+                            method: 'POST',
+                            body: formData
+                          });
+                          const json = await res.json();
+                          if (res.ok && json.url) {
+                            setAvatar(json.url);
+                          } else {
+                            alert(json.error || 'Upload failed');
+                          }
+                        } catch (err) {
+                          alert('Upload failed');
+                        }
+                      }}
+                      className="hidden"
+                    />
+                  </label>
                 </div>
 
                 <div className="space-y-1.5">

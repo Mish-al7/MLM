@@ -1,4 +1,4 @@
-import { Inter, Outfit } from "next/font/google";
+import { Inter, Cinzel } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -7,7 +7,7 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const outfit = Outfit({
+const cinzel = Cinzel({
   variable: "--font-heading",
   subsets: ["latin"],
 });
@@ -19,7 +19,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${outfit.variable} h-full`}>
+    <html lang="en" className={`${inter.variable} ${cinzel.variable} h-full`}>
       <head>
         <Script id="release-pointer-capture-patch" strategy="beforeInteractive">
           {`

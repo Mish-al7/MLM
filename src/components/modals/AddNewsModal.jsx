@@ -122,15 +122,33 @@ export default function AddNewsModal({ isOpen, onClose, onSuccess, editItem = nu
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Preview Image URL</label>
-            <input 
-              type="text" 
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-black focus:outline-none focus:border-amber-500 transition-colors"
-              placeholder="e.g. https://images.unsplash.com/photo-..."
-            />
+            <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Preview Image</label>
+            <label className="bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 px-4 py-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors w-full">
+              <ImageIcon size={14} className="text-[#C5A059]" />
+              <span>Select & Upload News Image</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const data = new FormData();
+                  data.append('file', file);
+                  try {
+                    const res = await fetch('/api/upload', { method: 'POST', body: data });
+                    const json = await res.json();
+                    if (res.ok && json.url) {
+                      setFormData(prev => ({ ...prev, image: json.url }));
+                    } else {
+                      alert(json.error || 'Upload failed');
+                    }
+                  } catch (err) {
+                    alert('Upload failed');
+                  }
+                }}
+                className="hidden"
+              />
+            </label>
             {formData.image && (
               <div className="mt-3 relative rounded-xl overflow-hidden border border-zinc-800 max-h-32 bg-zinc-900 flex items-center justify-center">
                 <img 

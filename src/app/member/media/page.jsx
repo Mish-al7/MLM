@@ -1,7 +1,7 @@
 import React from 'react';
-import { Image as ImageIcon } from 'lucide-react';
 import { getSessionUser } from '@/lib/auth';
 import PageHeader from '@/components/shared/PageHeader';
+import MediaClient from '@/components/shared/MediaClient';
 
 export default async function MemberMediaPage() {
   const session = await getSessionUser();
@@ -14,10 +14,7 @@ export default async function MemberMediaPage() {
         subtitle="Photos and videos from recent events."
       />
 
-      <div className="p-8 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl bg-slate-50">
-        <ImageIcon size={40} className="mx-auto mb-4 text-slate-300" />
-        <p className="text-sm font-semibold">Gallery is empty</p>
-      </div>
+      <MediaClient isAdmin={false} />
     </div>
   );
 }

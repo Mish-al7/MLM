@@ -6,56 +6,31 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   Users, Award, FileText, Calendar as CalendarIcon, Image as ImageIcon,
   Bell, Volume2, LayoutDashboard, LogOut, UserPlus,
-  Menu, X, Trophy, BarChart2, Briefcase, Settings, BookOpen
+  Menu, X, Trophy, BarChart2, Briefcase, Settings, BookOpen,
+  Network, GitFork, Megaphone, Shield, TrendingUp, Crown
 } from 'lucide-react';
 
-// ─── Navigation Architecture ──────────────────────────────────────────────────
+// ─── Navigation Architecture (Flat List) ──────────────────────────────────────
 const NAV_STRUCTURE = (isAdmin) => [
-  {
-    type: 'item',
-    id: '', label: 'Dashboard', icon: LayoutDashboard, adminOnly: false,
-  },
-  {
-    type: 'group', label: 'My Network',
-    items: [
-      { id: 'team',      label: isAdmin ? 'Team Hierarchy' : 'My Team', icon: Users,     adminOnly: false },
-      { id: 'referrals', label: 'Referral Team',                         icon: UserPlus,  adminOnly: true  },
-      { id: 'bop',       label: 'Business Opp. Program',                 icon: Briefcase, adminOnly: false },
-    ],
-  },
-  {
-    type: 'group', label: 'Communications',
-    items: [
-      { id: 'updates', label: 'Announcements', icon: Bell,    adminOnly: false },
-      { id: 'news',    label: 'News Center',   icon: Volume2, adminOnly: false },
-    ],
-  },
-  {
-    type: 'group', label: 'Events & Planning',
-    items: [
-      { id: 'events',   label: 'Events',   icon: Award,        adminOnly: false },
-      { id: 'calendar', label: 'Calendar', icon: CalendarIcon, adminOnly: false },
-    ],
-  },
-  {
-    type: 'group', label: 'Performance & Reports',
-    items: [
-      { id: 'reports',      label: 'Reports & Analytics', icon: BarChart2, adminOnly: true },
-      { id: 'achievements', label: 'Achievements',         icon: Trophy,   adminOnly: true },
-    ],
-  },
-  {
-    type: 'group', label: 'Resources',
-    items: [
-      { id: 'documents', label: 'Documents',     icon: FileText,  adminOnly: false },
-      { id: 'media',     label: 'Media Gallery', icon: ImageIcon, adminOnly: false },
-      { id: 'ledger',    label: 'Personal Ledger', icon: BookOpen,  adminOnly: false },
-    ],
-  },
+  { id: '',            label: 'Dashboard',             icon: Network,      adminOnly: false },
+  { id: 'team',        label: isAdmin ? 'Team Hierarchy' : 'My Team', icon: GitFork,      adminOnly: false },
+  { id: 'referrals',   label: 'Referral Team',         icon: Users,        adminOnly: true  },
+  { id: 'royal-kings-club',  label: 'Royal Kings Club',      icon: Crown,        adminOnly: false },
+  { id: 'bop',         label: 'Business Opp. Program', icon: Briefcase,    adminOnly: false },
+  { id: 'updates',     label: 'Announcements',         icon: Megaphone,    adminOnly: false },
+  { id: 'news',        label: 'News Center',           icon: Bell,         adminOnly: false },
+  { id: 'events',      label: 'Events',                icon: Shield,       adminOnly: false },
+  { id: 'calendar',    label: 'Calendar',              icon: CalendarIcon, adminOnly: false },
+  { id: 'reports',     label: 'Reports & Analytics',   icon: TrendingUp,   adminOnly: true  },
+  { id: 'achievements',label: 'Achievements',          icon: Trophy,       adminOnly: true  },
+  { id: 'banners',     label: 'Dashboard Banners',     icon: ImageIcon,    adminOnly: true  },
+  { id: 'documents',        label: 'Documents',             icon: FileText,     adminOnly: false },
+  { id: 'media',             label: 'Media Gallery',         icon: ImageIcon,    adminOnly: false },
+  { id: 'ledger',            label: 'Personal Ledger',       icon: BookOpen,     adminOnly: false },
 ];
 
 // ─── NavItem component ─────────────────────────────────────────────────────────
-function NavItem({ item, basePath, pathname, onClick, indented = false }) {
+function NavItem({ item, basePath, pathname, onClick }) {
   const href = `${basePath}${item.id ? '/' + item.id : ''}`;
   const isActive = item.id === ''
     ? pathname === href
@@ -67,25 +42,32 @@ function NavItem({ item, basePath, pathname, onClick, indented = false }) {
       href={href}
       onClick={onClick}
       className={`
-        group relative flex items-center gap-2.5 rounded-lg text-[13px] font-medium
-        transition-all duration-150 select-none
-        ${indented ? 'pl-3 pr-3 py-[7px] ml-2' : 'px-3 py-[7px]'}
+        group relative flex items-center gap-3 rounded-lg text-xs font-semibold
+        transition-all duration-150 select-none px-3.5 py-2.5 uppercase tracking-wider
         ${isActive
-          ? 'text-blue-600 bg-blue-50'
-          : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'}
+          ? 'text-white bg-[#0A1E3D]'
+          : 'text-slate-500 hover:text-[#0A1E3D] hover:bg-slate-100/50'}
       `}
     >
       {isActive && (
-        <span className="absolute left-0 inset-y-[5px] w-[3px] bg-blue-500 rounded-r-full" />
+        <span className="absolute left-0 inset-y-0 w-[4px] bg-[#C5A059] rounded-l-lg" />
       )}
-      <Icon
-        size={15}
-        strokeWidth={isActive ? 2.2 : 1.75}
-        className={`flex-shrink-0 transition-colors duration-150 ${
-          isActive ? 'text-blue-500' : 'text-slate-400 group-hover:text-slate-500'
-        }`}
-      />
-      <span className="leading-none truncate">{item.label}</span>
+      
+      {/* Pinned circular badge icon system */}
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-150 ${
+        isActive ? 'bg-[#C5A059]' : 'bg-[#0A1E3D]'
+      }`}>
+        <Icon
+          size={16}
+          strokeWidth={0}
+          fill="currentColor"
+          className={`fill-current w-4 h-4 flex-shrink-0 transition-colors duration-150 ${
+            isActive ? 'text-[#0A1E3D]' : 'text-[#C5A059]'
+          }`}
+        />
+      </div>
+      
+      <span className="leading-snug whitespace-normal">{item.label}</span>
     </Link>
   );
 }
@@ -110,54 +92,78 @@ export default function Sidebar({ user }) {
     } catch (err) { console.error(err); }
   };
 
-  const filtered = structure
-    .map(node => {
-      if (node.type === 'item') return (!node.adminOnly || isAdmin) ? node : null;
-      const items = node.items.filter(i => !i.adminOnly || isAdmin);
-      return items.length > 0 ? { ...node, items } : null;
-    })
-    .filter(Boolean);
+  const flatItems = structure.filter(item => !item.adminOnly || isAdmin);
 
-  const flatItems = filtered.flatMap(node =>
-    node.type === 'item' ? [node] : node.items
-  );
-
-  // ── Profile card (clickable, no border box) ─────────────────────────────────
+  // ── Profile card for mobile drawer ─────────────────────────────────
   const ProfileCard = ({ onClick }) => (
     <Link
       href={profileHref}
       onClick={onClick}
-      className="group flex items-center gap-3 px-5 py-4 hover:bg-slate-50 transition-colors border-b border-slate-100"
+      className="group flex items-center gap-3 px-5 py-4 hover:bg-[#FBF9F4] transition-colors border-b border-[#C5A059]/20"
     >
       <div className="relative flex-shrink-0">
         <img
           src={user.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100'}
           alt={user.name}
-          className="w-8 h-8 rounded-full object-cover"
+          className="w-8 h-8 rounded-full object-cover border border-[#C5A059]/30"
         />
-        <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-white" />
+        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full border border-white" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[13px] font-semibold text-slate-800 truncate leading-tight">{user.name}</p>
-        <p className="text-[11px] text-slate-400 truncate mt-0.5 font-mono">
+        <p className="text-[13px] font-semibold text-[#001B3A] truncate leading-tight uppercase tracking-wider">{user.name}</p>
+        <p className="text-[10px] text-slate-500 truncate mt-0.5 font-mono uppercase">
           {isAdmin ? 'Top leader' : 'Member'}
         </p>
       </div>
       <Settings
-        size={13}
+        size={14}
         strokeWidth={1.75}
-        className="flex-shrink-0 text-slate-300 group-hover:text-blue-400 transition-colors"
+        className="flex-shrink-0 text-slate-400 group-hover:text-[#C5A059] transition-colors"
       />
     </Link>
+  );
+
+  // ── Profile avatar pinned block (Desktop Bottom) ───────────────────
+  const ProfileAvatarBlock = () => (
+    <div className="flex items-center gap-3 px-5 py-4 border-t border-[#C5A059]/20 bg-white">
+      <Link
+        href={profileHref}
+        className="relative group block flex-shrink-0"
+      >
+        <img
+          src={user.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100'}
+          alt={user.name}
+          className="w-10 h-10 rounded-full object-cover border border-[#C5A059]/30 hover:border-[#C5A059] transition-colors"
+        />
+        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full border border-white" />
+      </Link>
+      
+      {/* User Info */}
+      <div className="min-w-0 flex-1">
+        <p className="text-[13px] font-semibold text-[#001B3A] truncate leading-tight uppercase tracking-wider">{user.name}</p>
+        <p className="text-[10px] text-slate-500 truncate mt-0.5 font-mono uppercase">
+          {isAdmin ? 'Top leader' : 'Member'}
+        </p>
+      </div>
+
+      <button
+        onClick={handleLogout}
+        title="Sign Out"
+        className="p-2 rounded-lg text-[#001B3A] hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer flex-shrink-0"
+        aria-label="Sign Out"
+      >
+        <LogOut size={20} strokeWidth={2} className="text-[#001B3A] hover:text-red-600 transition-colors" />
+      </button>
+    </div>
   );
 
   return (
     <>
       {/* ── Mobile header ────────────────────────────────────────────────────── */}
-      <header className="fixed top-0 left-0 w-full h-14 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-4 z-50 md:hidden">
+      <header className="fixed top-0 left-0 w-full h-14 bg-white/80 backdrop-blur-md border-b border-[#C5A059]/20 flex items-center justify-between px-4 z-50 md:hidden">
         <div>
-          <h2 className="text-base font-black tracking-widest font-heading">
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">ALLIANZA</span>
+          <h2 className="text-base font-black tracking-widest font-heading text-[#001B3A]">
+            ALLIANZA
           </h2>
         </div>
         <div className="flex items-center gap-2">
@@ -165,7 +171,7 @@ export default function Sidebar({ user }) {
             <img
               src={user.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100'}
               alt={user.name}
-              className="w-8 h-8 rounded-full object-cover border border-slate-100 shadow-sm"
+              className="w-8 h-8 rounded-full object-cover border border-[#C5A059]/20 shadow-sm"
             />
           </Link>
           <button
@@ -185,7 +191,7 @@ export default function Sidebar({ user }) {
           onClick={() => setIsOpen(false)}
         >
           <div
-            className="bg-white border-b border-slate-100 max-h-[80vh] overflow-y-auto flex flex-col shadow-xl"
+            className="bg-white border-b border-[#C5A059]/20 max-h-[80vh] overflow-y-auto flex flex-col shadow-xl"
             onClick={e => e.stopPropagation()}
           >
             <ProfileCard onClick={() => setIsOpen(false)} />
@@ -204,12 +210,16 @@ export default function Sidebar({ user }) {
                     onClick={() => setIsOpen(false)}
                     className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl border text-center transition-all ${
                       isActive
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                        ? 'bg-[#0A1E3D] text-white border-[#C5A059] shadow-sm'
                         : 'bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100'
                     }`}
                   >
-                    <Icon size={17} strokeWidth={isActive ? 2.2 : 1.75} />
-                    <span className="text-[10px] font-semibold leading-tight truncate max-w-full">{item.label}</span>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 ${
+                      isActive ? 'bg-[#C5A059]' : 'bg-[#0A1E3D]'
+                    }`}>
+                      <Icon size={16} strokeWidth={0} fill="currentColor" className="text-white fill-current" />
+                    </div>
+                    <span className="text-[10px] font-semibold leading-tight truncate max-w-full uppercase tracking-wider">{item.label}</span>
                   </Link>
                 );
               })}
@@ -229,7 +239,7 @@ export default function Sidebar({ user }) {
       )}
 
       {/* ── Mobile bottom navigation 5 tabs ────────────────────────────────────── */}
-      <nav className="grid grid-cols-5 h-16 fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-md border-t border-slate-100 shadow-lg z-50 md:hidden">
+      <nav className="grid grid-cols-5 h-16 fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-md border-t border-[#C5A059]/20 shadow-lg z-50 md:hidden">
         {/* Tab 1: Dashboard */}
         {(() => {
           const href = basePath;
@@ -237,12 +247,14 @@ export default function Sidebar({ user }) {
           return (
             <Link
               href={href}
-              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
-                isActive ? 'text-[#2563EB]' : 'text-slate-400 hover:text-slate-600'
-              }`}
+              className="flex flex-col items-center justify-center gap-1 transition-colors"
             >
-              <LayoutDashboard size={18} strokeWidth={isActive ? 2.2 : 1.75} />
-              <span className="text-[10px] font-semibold tracking-wide">Dashboard</span>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center ${
+                isActive ? 'bg-[#C5A059]' : 'bg-[#0A1E3D]'
+              }`}>
+                <Network size={14} strokeWidth={0} fill="currentColor" className="text-white fill-current" />
+              </div>
+              <span className="text-[8px] font-semibold tracking-wide uppercase">Dashboard</span>
             </Link>
           );
         })()}
@@ -255,12 +267,14 @@ export default function Sidebar({ user }) {
           return (
             <Link
               href={href}
-              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
-                isActive ? 'text-[#2563EB]' : 'text-slate-400 hover:text-slate-600'
-              }`}
+              className="flex flex-col items-center justify-center gap-1 transition-colors"
             >
-              <Users size={18} strokeWidth={isActive ? 2.2 : 1.75} />
-              <span className="text-[10px] font-semibold tracking-wide truncate max-w-full px-1">{label}</span>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center ${
+                isActive ? 'bg-[#C5A059]' : 'bg-[#0A1E3D]'
+              }`}>
+                <GitFork size={14} strokeWidth={0} fill="currentColor" className="text-white fill-current" />
+              </div>
+              <span className="text-[8px] font-semibold tracking-wide truncate max-w-full px-1 uppercase">{label}</span>
             </Link>
           );
         })()}
@@ -272,12 +286,14 @@ export default function Sidebar({ user }) {
           return (
             <Link
               href={href}
-              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
-                isActive ? 'text-[#2563EB]' : 'text-slate-400 hover:text-slate-600'
-              }`}
+              className="flex flex-col items-center justify-center gap-1 transition-colors"
             >
-              <CalendarIcon size={18} strokeWidth={isActive ? 2.2 : 1.75} />
-              <span className="text-[10px] font-semibold tracking-wide">Calendar</span>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center ${
+                isActive ? 'bg-[#C5A059]' : 'bg-[#0A1E3D]'
+              }`}>
+                <CalendarIcon size={14} strokeWidth={0} fill="currentColor" className="text-white fill-current" />
+              </div>
+              <span className="text-[8px] font-semibold tracking-wide uppercase">Calendar</span>
             </Link>
           );
         })()}
@@ -289,12 +305,14 @@ export default function Sidebar({ user }) {
           return (
             <Link
               href={href}
-              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
-                isActive ? 'text-[#2563EB]' : 'text-slate-400 hover:text-slate-600'
-              }`}
+              className="flex flex-col items-center justify-center gap-1 transition-colors"
             >
-              <Bell size={18} strokeWidth={isActive ? 2.2 : 1.75} />
-              <span className="text-[10px] font-semibold tracking-wide">Announcements</span>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center ${
+                isActive ? 'bg-[#C5A059]' : 'bg-[#0A1E3D]'
+              }`}>
+                <Megaphone size={14} strokeWidth={0} fill="currentColor" className="text-white fill-current" />
+              </div>
+              <span className="text-[8px] font-semibold tracking-wide uppercase">News</span>
             </Link>
           );
         })()}
@@ -306,75 +324,44 @@ export default function Sidebar({ user }) {
           return (
             <Link
               href={href}
-              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
-                isActive ? 'text-[#2563EB]' : 'text-slate-400 hover:text-slate-600'
-              }`}
+              className="flex flex-col items-center justify-center gap-1 transition-colors"
             >
-              <FileText size={18} strokeWidth={isActive ? 2.2 : 1.75} />
-              <span className="text-[10px] font-semibold tracking-wide">Documents</span>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center ${
+                isActive ? 'bg-[#C5A059]' : 'bg-[#0A1E3D]'
+              }`}>
+                <FileText size={14} strokeWidth={0} fill="currentColor" className="text-white fill-current" />
+              </div>
+              <span className="text-[8px] font-semibold tracking-wide uppercase">Docs</span>
             </Link>
           );
         })()}
       </nav>
 
       {/* ── Desktop sidebar ───────────────────────────────────────────────────── */}
-      <aside className="hidden md:flex w-[220px] flex-col bg-white border-r border-slate-100 z-20 h-screen shrink-0">
+      <aside className="hidden md:flex w-[245px] flex-col bg-white border-r border-[#C5A059]/25 z-20 h-screen shrink-0">
 
         {/* Brand */}
-        <div className="px-5 pt-5 pb-4 border-b border-slate-100">
-          <h2 className="text-[15px] font-black tracking-widest font-heading">
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">ALLIANZA</span>
+        <div className="px-5 pt-5 pb-4 border-b border-[#C5A059]/20">
+          <h2 className="text-[20px] font-bold tracking-widest font-heading text-[#001B3A] leading-none">
+            ALLIANZA
           </h2>
-          <p className="text-[8px] text-slate-400 uppercase tracking-[0.2em] mt-1 font-semibold">Leadership Platform</p>
+          <p className="text-[8px] text-[#C5A059] uppercase tracking-[0.2em] mt-1 font-semibold">Leadership Platform</p>
         </div>
 
-        {/* Profile — clickable, no border card */}
-        <ProfileCard />
-
-        {/* Categorized navigation */}
-        <nav className="flex-1 px-2 py-3 overflow-y-auto space-y-0.5 custom-scrollbar">
-          {filtered.map((node, i) => {
-            if (node.type === 'item') {
-              return (
-                <NavItem
-                  key={node.id}
-                  item={node}
-                  basePath={basePath}
-                  pathname={pathname}
-                />
-              );
-            }
-            return (
-              <div key={node.label} className={i > 0 ? 'pt-3' : ''}>
-                <p className="px-3 pb-1.5 text-[10px] font-bold tracking-widest text-slate-400 uppercase select-none">
-                  {node.label}
-                </p>
-                <div className="space-y-0.5">
-                  {node.items.map(item => (
-                    <NavItem
-                      key={item.id}
-                      item={item}
-                      basePath={basePath}
-                      pathname={pathname}
-                      indented
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+        {/* Flat navigation list */}
+        <nav className="flex-1 px-2 py-3 overflow-y-auto space-y-1 custom-scrollbar">
+          {flatItems.map(item => (
+            <NavItem
+              key={item.id}
+              item={item}
+              basePath={basePath}
+              pathname={pathname}
+            />
+          ))}
         </nav>
 
-        {/* Sign out — pinned to bottom */}
-        <div className="px-2 pb-4 pt-2 border-t border-slate-100">
-          <button
-            onClick={handleLogout}
-            className="group w-full flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-[13px] font-medium text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all duration-150"
-          >
-            <LogOut size={15} strokeWidth={1.75} className="flex-shrink-0 group-hover:text-red-500 transition-colors" />
-            <span>Sign out</span>
-          </button>
-        </div>
+        {/* Profile Avatar pinned block (Desktop Bottom) */}
+        <ProfileAvatarBlock />
       </aside>
     </>
   );

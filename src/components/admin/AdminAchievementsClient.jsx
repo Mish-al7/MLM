@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { 
   Trophy, Award, Gift, Calendar as CalendarIcon, Users, 
   Search, Plus, CheckCircle, ArrowRight, RefreshCw, Star, 
-  MapPin, Compass, Car, ShieldAlert, Edit, Trash2, Settings, X, Save
+  MapPin, Compass, Car, ShieldAlert, Edit, Trash2, Settings, X, Save,
+  Crown, Gem
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -15,8 +16,8 @@ const getRankIcon = (iconName, colorClass = "text-amber-500") => {
     case 'Award': return <Award className={colorClass} size={24} />;
     case 'Compass': return <Compass className={colorClass} size={24} />;
     case 'MapPin': return <MapPin className={colorClass} size={24} />;
-    case 'Trophy': return <Trophy className={colorClass} size={24} />;
-    case 'Car': return <Car className={colorClass} size={24} />;
+    case 'Trophy': return <Gem className={colorClass} size={24} />;
+    case 'Car': return <Crown className={colorClass} size={24} />;
     default: return <Award className={colorClass} size={24} />;
   }
 };

@@ -98,7 +98,7 @@ export async function POST(req) {
     const status = isAdmin ? (body.status || 'active') : 'active';
 
     if (!name || !email || !dob || !allianzaId) {
-      return NextResponse.json({ error: 'Name, email, date of birth (DOB), and Allianza ID are required' }, { status: 400 });
+      return NextResponse.json({ error: 'Name, email, date of birth (DOB), and Tez ID are required' }, { status: 400 });
     }
 
     // Check if email already registered
@@ -107,11 +107,11 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 });
     }
 
-    // Use the user-inputted Allianza ID as the primary unique userId key
+    // Use the user-inputted Tez ID as the primary unique userId key
     const targetUserId = allianzaId.trim().toUpperCase();
     const duplicateId = await User.findOne({ userId: targetUserId });
     if (duplicateId) {
-      return NextResponse.json({ error: `Allianza ID "${targetUserId}" is already taken` }, { status: 400 });
+      return NextResponse.json({ error: `Tez ID "${targetUserId}" is already taken` }, { status: 400 });
     }
 
     // Verify manager exists if specified

@@ -3,6 +3,7 @@ import { getSessionUser } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import User from '@/models/User';
 import Rank from '@/models/Rank';
+import DashboardBanner from '@/models/DashboardBanner';
 import MemberDashboardClient from '@/components/member/MemberDashboardClient';
 import { redirect } from 'next/navigation';
 
@@ -30,15 +31,32 @@ export default async function MemberDashboard() {
     await Rank.insertMany(defaultRanks);
     ranks = await Rank.find({}).sort({ targetLeftBv: 1 }).lean();
   }
+
+  // Fetch banners
+  let bannerDoc = await DashboardBanner.findOne().lean();
+  if (!bannerDoc) {
+    const defaultBanners = [
+      { id: 1, imageUrl: 'https://images.unsplash.com/photo-1542744173-8e0856d116db?q=80&w=800&auto=format&fit=crop', altText: 'Banner Slot 1' },
+      { id: 2, imageUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800&auto=format&fit=crop', altText: 'Banner Slot 2' }
+    ];
+    bannerDoc = await DashboardBanner.create({ banners: defaultBanners });
+  }
   
+  // Fetch admins for member dashboard contact details
+  const admins = await User.find({ role: 'super_admin' }).select('name email phone phone2 avatar').lean();
+
   // Serialize user recursively to prevent server/client hydration errors
   const safeUser = JSON.parse(JSON.stringify(user));
   const safeRanks = JSON.parse(JSON.stringify(ranks));
+  const safeBanners = JSON.parse(JSON.stringify(bannerDoc.banners || []));
+  const safeAdmins = JSON.parse(JSON.stringify(admins));
 
   return (
     <MemberDashboardClient 
       initialUser={safeUser} 
       allRanks={safeRanks} 
+      initialBanners={safeBanners}
+      adminContacts={safeAdmins}
     />
   );
 }

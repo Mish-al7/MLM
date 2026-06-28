@@ -24,6 +24,7 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   dob: { type: Date, required: true },
   phone: { type: String, default: '' },
+  phone2: { type: String, default: '' },
   role: { type: String, enum: ['super_admin', 'member'], default: 'member' },
   status: { type: String, enum: ['active', 'inactive', 'archived'], default: 'active' },
   joiningDate: { type: Date, default: Date.now },

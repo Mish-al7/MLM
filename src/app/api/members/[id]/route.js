@@ -59,7 +59,7 @@ export async function PATCH(req, { params }) {
 
     if (isSelf) {
       // Self edit flow (Member or Admin editing their own profile)
-      const { name, email, phone, avatar, dob, password, leftBV, rightBV } = body;
+      const { name, email, phone, phone2, avatar, dob, password, leftBV, rightBV } = body;
 
       // Check Email unique constraint if email is changed
       if (email && email.toLowerCase() !== targetUser.email) {
@@ -72,6 +72,7 @@ export async function PATCH(req, { params }) {
 
       if (name) targetUser.name = name;
       if (phone !== undefined) targetUser.phone = phone;
+      if (phone2 !== undefined) targetUser.phone2 = phone2;
       if (avatar !== undefined) targetUser.avatar = avatar;
       if (dob !== undefined) targetUser.dob = dob ? new Date(dob) : null;
       
@@ -102,7 +103,7 @@ export async function PATCH(req, { params }) {
     } else if (isAdmin) {
       // Super Admin edit flow (can edit anything)
       const {
-        name, email, phone, allianzaId, managerId, status, role,
+        name, email, phone, phone2, allianzaId, managerId, status, role,
         leftBV, rightBV, rank, reward, upcomingRank, upcomingReward,
         achievementDate, personalNotes, avatar, dob, password
       } = body;
@@ -167,6 +168,7 @@ export async function PATCH(req, { params }) {
       // Standard fields updates
       if (name) targetUser.name = name;
       if (phone !== undefined) targetUser.phone = phone;
+      if (phone2 !== undefined) targetUser.phone2 = phone2;
       if (avatar !== undefined) targetUser.avatar = avatar;
       if (dob !== undefined) targetUser.dob = dob ? new Date(dob) : null;
       if (password) targetUser.password = hashPassword(password);
