@@ -29,7 +29,13 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then(async (mongoose) => {
+      try {
+        const { seedIfNeeded } = await import('./seedHelper');
+        await seedIfNeeded();
+      } catch (seedErr) {
+        console.error('[dbConnect] Error triggering auto-seed:', seedErr);
+      }
       return mongoose;
     });
   }
