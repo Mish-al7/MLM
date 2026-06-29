@@ -43,6 +43,34 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
     setSelectedMember(memberItem);
   };
 
+  const handleDeleteMember = async (userId, userName) => {
+    if (userId === currentUser.userId) {
+      alert('You cannot delete your own account.');
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to delete ${userName}? All downline members reporting to them will be reassigned to their reporting manager.`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/members/${userId}`, {
+        method: 'DELETE',
+      });
+      const json = await res.json();
+      if (res.ok) {
+        alert('Member deleted successfully.');
+        setSelectedMember(null);
+        fetchMembers(); // refresh hierarchy list
+      } else {
+        alert(json.error || 'Failed to delete member.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('An error occurred while deleting the member.');
+    }
+  };
+
   const toggleNodeCollapse = (userId) => {
     setCollapsedTreeNodes(prev => ({
       ...prev,
@@ -265,6 +293,15 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
                 );
               })()}
 
+              {selectedMember.userId !== currentUser.userId && (
+                <button
+                  onClick={() => handleDeleteMember(selectedMember.userId, selectedMember.name)}
+                  className="w-full mt-2 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all cursor-pointer"
+                >
+                  Delete Member Account
+                </button>
+              )}
+
               <p className="text-sm text-zinc-400">Click a tree node to inspect member details.</p>
             </div>
           ) : (
@@ -338,6 +375,15 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
                   <p className="text-xs text-zinc-600 text-center py-2">No members under this person yet.</p>
                 );
               })()}
+
+              {selectedMember.userId !== currentUser.userId && (
+                <button
+                  onClick={() => handleDeleteMember(selectedMember.userId, selectedMember.name)}
+                  className="w-full mt-2 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-50 hover:text-white transition-all cursor-pointer"
+                >
+                  Delete Member Account
+                </button>
+              )}
             </div>
           </div>
         </div>

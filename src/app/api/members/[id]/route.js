@@ -188,3 +188,42 @@ export async function PATCH(req, { params }) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
+export async function DELETE(req, { params }) {
+  try {
+    await dbConnect();
+    const currentUser = await getSessionUser();
+    if (!currentUser) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (currentUser.role !== 'super_admin') {
+      return NextResponse.json({ error: 'Forbidden: Only Super Admins can delete members' }, { status: 403 });
+    }
+
+    const { id } = await params;
+
+    if (currentUser.userId === id) {
+      return NextResponse.json({ error: 'You cannot delete your own account' }, { status: 400 });
+    }
+
+    const targetUser = await User.findOne({ userId: id });
+    if (!targetUser) {
+      return NextResponse.json({ error: 'Member not found' }, { status: 404 });
+    }
+
+    // Reassign downlines to the deleted member's manager (or null)
+    await User.updateMany(
+      { managerId: id },
+      { $set: { managerId: targetUser.managerId } }
+    );
+
+    // Delete user
+    await User.deleteOne({ userId: id });
+
+    return NextResponse.json({ success: true, message: 'Member deleted successfully and downlines reassigned.' });
+  } catch (error) {
+    console.error('Error deleting member:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
