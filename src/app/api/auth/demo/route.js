@@ -15,7 +15,7 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Invalid role requested' }, { status: 400 });
     }
 
-    const email = role === 'super_admin' ? 'aravind@allianza.team' : 'anjali@allianza.team';
+    const email = role === 'super_admin' ? 'jinil@allianza.team' : 'anjali@allianza.team';
 
     // Fetch user details
     let user = await User.findOne({ email });

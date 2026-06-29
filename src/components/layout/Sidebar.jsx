@@ -197,7 +197,7 @@ export default function Sidebar({ user }) {
             <ProfileCard onClick={() => setIsOpen(false)} />
 
             <div className="p-4 grid grid-cols-3 gap-2">
-              {flatItems.map(item => {
+              {flatItems.filter(item => !['', 'team', 'calendar', 'updates', 'documents'].includes(item.id)).map(item => {
                 const href = `${basePath}${item.id ? '/' + item.id : ''}`;
                 const isActive = item.id === ''
                   ? pathname === href

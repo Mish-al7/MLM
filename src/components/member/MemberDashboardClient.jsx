@@ -123,13 +123,15 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
         <h1 className="text-sm font-bold text-zinc-100 font-heading">
           Good evening, {user.name.split(' ')[0]}.
         </h1>
-        <span className="text-[10px] text-zinc-500 font-mono">ID: {user.userId}</span>
+        <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#0A1E3D] text-white border border-[#C5A059]/40 shadow-sm font-mono">
+          ID: {user.userId}
+        </span>
       </div>
 
       {/* Business Value Cards Block */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
         {/* Left Business Value Card */}
-        <div className="glass-panel p-3 rounded-xl relative border border-zinc-800 bg-zinc-950/40">
+        <div className="glass-panel p-3 rounded-xl relative border border-zinc-800 bg-zinc-900">
           <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Left Business Value</p>
           {editMode ? (
             <input 
@@ -146,7 +148,7 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
         </div>
 
         {/* Right Business Value Card */}
-        <div className="glass-panel p-3 rounded-xl relative border border-zinc-800 bg-zinc-950/40">
+        <div className="glass-panel p-3 rounded-xl relative border border-zinc-800 bg-zinc-900">
           <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Right Business Value</p>
           {editMode ? (
             <input 
@@ -162,12 +164,28 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
           )}
         </div>
 
-        {/* Ranks Milestone Indicator Card */}
-        <div className="glass-panel p-3 rounded-xl relative border border-zinc-800 bg-zinc-950/40 flex justify-between items-start">
+        {/* Current Rank Milestone Indicator Card */}
+        <div className="glass-panel p-3 rounded-xl relative border border-zinc-800 bg-zinc-900 flex justify-between items-start">
           <div>
             <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Current Rank Milestone</p>
             <h3 className="text-lg font-bold text-zinc-200 mt-0.5 uppercase tracking-wide">{user.rank || 'Associate'}</h3>
             <p className="text-[10px] text-amber-500 mt-0.5 font-semibold">Reward: {user.reward || 'None'}</p>
+          </div>
+          <div className="w-8 h-8 rounded-full bg-[#0A1E3D] flex items-center justify-center flex-shrink-0">
+            <Award size={16} strokeWidth={0} fill="currentColor" className="text-white fill-current w-4 h-4 flex-shrink-0" />
+          </div>
+        </div>
+
+        {/* Next Rank Milestone Card */}
+        <div className="glass-panel p-3 rounded-xl relative border border-zinc-800 bg-zinc-900 flex justify-between items-start">
+          <div>
+            <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Next Rank Milestone</p>
+            <h3 className="text-lg font-bold text-zinc-200 mt-0.5 uppercase tracking-wide">
+              {milestoneProgress?.nextRank?.name || 'Max Rank Reached'}
+            </h3>
+            <p className="text-[10px] text-cyan-500 mt-0.5 font-semibold">
+              Reward: {milestoneProgress?.nextRank?.reward || 'None'}
+            </p>
           </div>
           <div className="w-8 h-8 rounded-full bg-[#0A1E3D] flex items-center justify-center flex-shrink-0">
             <Award size={16} strokeWidth={0} fill="currentColor" className="text-white fill-current w-4 h-4 flex-shrink-0" />
@@ -209,15 +227,11 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
           banners.filter(b => b.imageUrl).length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'
         }`}>
           {banners.filter(b => b.imageUrl).map((b) => (
-            <div key={b.id} className="relative h-72 md:h-96 w-full rounded-xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
-              <Image
+            <div key={b.id} className="w-full rounded-xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50 flex items-center justify-center">
+              <img
                 src={b.imageUrl}
                 alt={b.altText || `Promotional Banner ${b.id}`}
-                fill
-                className="object-cover"
-                sizes={banners.filter(b => b.imageUrl).length === 2 ? "(max-width: 768px) 100vw, 50vw" : "100vw"}
-                priority
-                unoptimized
+                className="w-full h-auto object-contain max-h-[480px] rounded-xl"
               />
             </div>
           ))}
@@ -251,7 +265,21 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
                   {(admin.phone || admin.phone2) && (
                     <p className="text-[10px] text-slate-500 font-medium flex items-center gap-1.5">
                       <span className="font-semibold text-slate-400 uppercase">Contact:</span> 
-                      {admin.phone || 'N/A'}{admin.phone2 ? ` / ${admin.phone2}` : ''}
+                      {admin.phone ? (
+                        <a href={`tel:${admin.phone}`} className="text-blue-600 hover:text-blue-800 hover:underline">
+                          {admin.phone}
+                        </a>
+                      ) : (
+                        'N/A'
+                      )}
+                      {admin.phone2 && (
+                        <>
+                          {' / '}
+                          <a href={`tel:${admin.phone2}`} className="text-blue-600 hover:text-blue-800 hover:underline">
+                            {admin.phone2}
+                          </a>
+                        </>
+                      )}
                     </p>
                   )}
                 </div>
