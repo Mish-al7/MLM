@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ShieldAlert, Users } from 'lucide-react';
+import { ShieldAlert, Users, Eye, EyeOff } from 'lucide-react';
 
 export default function Home() {
   const router = useRouter();
@@ -10,6 +10,7 @@ export default function Home() {
   // Session & Auth States
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState('');
   const [authSuccess, setAuthSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -82,14 +83,24 @@ export default function Home() {
           </div>
           <div>
             <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Password</label>
-            <input 
-              type="password" 
-              value={authPassword} 
-              onChange={(e) => setAuthPassword(e.target.value)}
-              placeholder="••••••••" 
-              className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 text-black focus:outline-none focus:border-blue-500 transition-colors"
-              required
-            />
+            <div className="relative">
+              <input 
+                type={showPassword ? "text" : "password"} 
+                value={authPassword} 
+                onChange={(e) => setAuthPassword(e.target.value)}
+                placeholder="••••••••" 
+                className="w-full bg-zinc-50 border border-zinc-200 rounded-lg pl-4 pr-10 py-3 text-black focus:outline-none focus:border-blue-500 transition-colors"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer"
+                tabIndex="-1"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
           <button 
             type="submit" 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, ShieldAlert, Lock } from 'lucide-react';
+import { X, ShieldAlert, Lock, Eye, EyeOff } from 'lucide-react';
 
 export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMembers, lockedManagerId }) {
   const isLockedMode = !!lockedManagerId;
@@ -16,6 +16,7 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
     role: 'member',
     password: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -149,15 +150,25 @@ export default function AddMemberModal({ isOpen, onClose, onSuccess, existingMem
             </div>
             <div>
               <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Login Password *</label>
-              <input 
-                type="password" 
-                name="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 transition-colors"
-                placeholder="Initial login password"
-              />
+              <div className="relative">
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  name="password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-4 pr-10 py-2.5 text-zinc-100 focus:outline-none focus:border-amber-500 transition-colors"
+                  placeholder="Initial login password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
+                  tabIndex="-1"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
           </div>
 
