@@ -7,7 +7,7 @@ import {
   Users, Award, FileText, Calendar as CalendarIcon, Image as ImageIcon,
   Bell, Volume2, LayoutDashboard, LogOut, UserPlus,
   Menu, X, Trophy, BarChart2, Briefcase, Settings, BookOpen,
-  Network, GitFork, Megaphone, Shield, TrendingUp, Crown
+  Network, GitFork, Megaphone, Shield, TrendingUp, Crown, Heart
 } from 'lucide-react';
 
 // ─── Navigation Architecture (Flat List) ──────────────────────────────────────
@@ -27,6 +27,7 @@ const NAV_STRUCTURE = (isAdmin) => [
   { id: 'documents',        label: 'Documents',             icon: FileText,     adminOnly: false },
   { id: 'media',             label: 'Media Gallery',         icon: ImageIcon,    adminOnly: false },
   { id: 'ledger',            label: 'Personal Ledger',       icon: BookOpen,     adminOnly: false },
+  { id: 'care-fund',         label: 'Care Fund',             icon: Heart,        adminOnly: false },
 ];
 
 // ─── NavItem component ─────────────────────────────────────────────────────────
