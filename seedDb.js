@@ -184,7 +184,7 @@ async function runSeed() {
     console.log('Seeding initial production Super Admin accounts...');
     const superAdmin = new User({
       userId: 'ALZ-0001',
-      name: 'Jinil',
+      name: 'Jinil Joseph',
       email: 'jinil@allianza.team',
       dob: new Date('1988-06-15'),
       phone: '+91 9800000001',
@@ -203,6 +203,29 @@ async function runSeed() {
       password: hashPassword('password123')
     });
     await superAdmin.save();
+
+    // Member (anjali)
+    const memberUser = new User({
+      userId: 'ALZ-0002',
+      name: 'Anjali Kumar',
+      email: 'anjali@allianza.team',
+      dob: new Date('1992-04-10'),
+      phone: '+91 9800000002',
+      role: 'member',
+      status: 'active',
+      allianzaId: 'ALZ-80002',
+      managerId: 'ALZ-0001',
+      avatar: '',
+      leftBV: 12000,
+      rightBV: 8000,
+      rank: 'Associate',
+      reward: 'None',
+      upcomingRank: 'Silver',
+      upcomingReward: 'Leadership Pin',
+      personalNotes: 'Member Account',
+      password: hashPassword('password123')
+    });
+    await memberUser.save();
 
     // 5. Seed default Ranks structure
     console.log('Seeding default rank configurations...');

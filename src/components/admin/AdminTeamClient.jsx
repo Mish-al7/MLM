@@ -29,7 +29,9 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
 
   const fetchMembers = async () => {
     try {
-      const res = await fetch(`/api/members?sortBy=${memberSort}`);
+      const res = await fetch(`/api/members?sortBy=${memberSort}&t=${Date.now()}`, {
+        cache: 'no-store'
+      });
       if (res.ok) {
         const json = await res.json();
         setMembers(json.data);
@@ -61,7 +63,9 @@ export default function AdminTeamClient({ initialMembers, currentUser }) {
       if (res.ok) {
         alert('Member deleted successfully.');
         setSelectedMember(null);
-        fetchMembers(); // refresh hierarchy list
+        // Instantly update UI by filtering out deleted member
+        setMembers(prev => prev.filter(m => m.userId !== userId));
+        fetchMembers(); // refresh hierarchy list to sync downlines from server
       } else {
         alert(json.error || 'Failed to delete member.');
       }

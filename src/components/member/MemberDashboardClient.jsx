@@ -4,7 +4,8 @@ import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { 
   Award, Edit2, TrendingUp, DollarSign, Calendar as CalendarIcon, 
-  MapPin, CheckCircle, Flame, ShieldAlert, Navigation, ArrowUpRight 
+  MapPin, CheckCircle, Flame, ShieldAlert, Navigation, ArrowUpRight,
+  Mail, Phone
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -131,7 +132,7 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
       {/* Business Value Cards Block */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
         {/* Left Business Value Card */}
-        <div className="glass-panel p-3 rounded-xl relative border border-zinc-800 bg-zinc-900">
+        <div className="p-3 rounded-xl relative border border-zinc-800 bg-zinc-900 shadow-[0_2px_8px_rgba(197,160,89,0.04)]">
           <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Left Business Value</p>
           {editMode ? (
             <input 
@@ -148,7 +149,7 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
         </div>
 
         {/* Right Business Value Card */}
-        <div className="glass-panel p-3 rounded-xl relative border border-zinc-800 bg-zinc-900">
+        <div className="p-3 rounded-xl relative border border-zinc-800 bg-zinc-900 shadow-[0_2px_8px_rgba(197,160,89,0.04)]">
           <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Right Business Value</p>
           {editMode ? (
             <input 
@@ -257,25 +258,28 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
                   alt={admin.name}
                   className="w-12 h-12 rounded-full object-cover border border-slate-200 shadow-sm flex-shrink-0"
                 />
-                <div className="min-w-0 flex-1 space-y-0.5">
-                  <h4 className="text-xs font-bold text-[#001B3A] uppercase tracking-wider truncate">{admin.name}</h4>
-                  <p className="text-[10px] text-slate-500 font-medium flex items-center gap-1.5 truncate">
-                    <span className="font-semibold text-slate-400 uppercase">Email:</span> {admin.email}
+                <div className="min-w-0 flex-1 space-y-1">
+                  <h4 className="text-sm font-black text-black uppercase tracking-wider truncate">{admin.name}</h4>
+                  <p className="text-xs text-slate-500 font-medium flex items-center gap-2 truncate">
+                    <Mail size={13} className="text-black flex-shrink-0" />
+                    <a href={`mailto:${admin.email}`} className="text-[#2563eb] hover:text-[#1d4ed8] font-bold hover:underline">
+                      {admin.email}
+                    </a>
                   </p>
                   {(admin.phone || admin.phone2) && (
-                    <p className="text-[10px] text-slate-500 font-medium flex items-center gap-1.5">
-                      <span className="font-semibold text-slate-400 uppercase">Contact:</span> 
+                    <p className="text-sm text-slate-500 flex items-center gap-2">
+                      <Phone size={13} className="text-black flex-shrink-0" />
                       {admin.phone ? (
-                        <a href={`tel:${admin.phone}`} className="text-blue-600 hover:text-blue-800 hover:underline">
+                        <a href={`tel:${admin.phone}`} className="text-[#2563eb] hover:text-[#1d4ed8] font-bold hover:underline">
                           {admin.phone}
                         </a>
                       ) : (
-                        'N/A'
+                        <span className="text-[#2563eb] font-bold">N/A</span>
                       )}
                       {admin.phone2 && (
                         <>
-                          {' / '}
-                          <a href={`tel:${admin.phone2}`} className="text-blue-600 hover:text-blue-800 hover:underline">
+                          <span className="text-slate-400">{' / '}</span>
+                          <a href={`tel:${admin.phone2}`} className="text-[#2563eb] hover:text-[#1d4ed8] font-bold hover:underline">
                             {admin.phone2}
                           </a>
                         </>

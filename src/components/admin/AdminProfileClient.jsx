@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { User, Mail, Phone, Calendar, Shield, Edit2, Lock, Save, X, ShieldAlert } from 'lucide-react';
+import { User, Mail, Phone, Calendar, Shield, Edit2, Lock, Save, X, ShieldAlert, TrendingUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function AdminProfileClient({ currentUser }) {
@@ -17,6 +17,8 @@ export default function AdminProfileClient({ currentUser }) {
   const [phone2, setPhone2] = useState(currentUser.phone2 || '');
   const [avatar, setAvatar] = useState(currentUser.avatar || '');
   const [dob, setDob] = useState(currentUser.dob ? new Date(currentUser.dob).toISOString().split('T')[0] : '');
+  const [leftBV, setLeftBV] = useState(currentUser.leftBV || 0);
+  const [rightBV, setRightBV] = useState(currentUser.rightBV || 0);
   const [password, setPassword] = useState('');
 
   const handleSave = async (e) => {
@@ -36,6 +38,8 @@ export default function AdminProfileClient({ currentUser }) {
           phone2,
           avatar,
           dob,
+          leftBV,
+          rightBV,
           ...(password ? { password } : {})
         })
       });
@@ -197,6 +201,26 @@ export default function AdminProfileClient({ currentUser }) {
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
                   />
                 </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Left Business Value</label>
+                  <input
+                    type="number"
+                    value={leftBV}
+                    onChange={(e) => setLeftBV(Number(e.target.value) || 0)}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] text-zinc-500 uppercase font-semibold">Right Business Value</label>
+                  <input
+                    type="number"
+                    value={rightBV}
+                    onChange={(e) => setRightBV(Number(e.target.value) || 0)}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
+                  />
+                </div>
               </div>
             </div>
 
@@ -211,6 +235,8 @@ export default function AdminProfileClient({ currentUser }) {
                   setPhone2(currentUser.phone2 || '');
                   setAvatar(currentUser.avatar || '');
                   setDob(currentUser.dob ? new Date(currentUser.dob).toISOString().split('T')[0] : '');
+                  setLeftBV(currentUser.leftBV || 0);
+                  setRightBV(currentUser.rightBV || 0);
                   setPassword('');
                 }}
                 disabled={loading}
@@ -282,6 +308,22 @@ export default function AdminProfileClient({ currentUser }) {
                   <div className="min-w-0">
                     <p className="text-[10px] text-zinc-500 uppercase font-semibold">System Privileges</p>
                     <p className="text-sm text-red-400 font-bold capitalize">Super Administrator</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 bg-zinc-900/50 rounded-lg border border-zinc-800/50">
+                  <TrendingUp className="text-zinc-500" size={16} />
+                  <div className="min-w-0">
+                    <p className="text-[10px] text-zinc-500 uppercase font-semibold">Left Business Value</p>
+                    <p className="text-sm font-bold text-[#C5A059] font-mono">{(currentUser.leftBV || 0).toLocaleString()}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 bg-zinc-900/50 rounded-lg border border-zinc-800/50">
+                  <TrendingUp className="text-zinc-500" size={16} />
+                  <div className="min-w-0">
+                    <p className="text-[10px] text-zinc-500 uppercase font-semibold">Right Business Value</p>
+                    <p className="text-sm font-bold text-[#C5A059] font-mono">{(currentUser.rightBV || 0).toLocaleString()}</p>
                   </div>
                 </div>
               </div>

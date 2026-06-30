@@ -175,6 +175,14 @@ export default function Sidebar({ user }) {
             />
           </Link>
           <button
+            onClick={handleLogout}
+            title="Sign Out"
+            className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg border border-slate-100 transition-colors cursor-pointer"
+            aria-label="Sign Out"
+          >
+            <LogOut size={18} strokeWidth={2} />
+          </button>
+          <button
             onClick={() => setIsOpen(!isOpen)}
             className="p-1.5 text-slate-500 hover:bg-slate-50 rounded-lg border border-slate-100 transition-colors"
             aria-label="Toggle menu"
@@ -196,33 +204,16 @@ export default function Sidebar({ user }) {
           >
             <ProfileCard onClick={() => setIsOpen(false)} />
 
-            <div className="p-4 grid grid-cols-3 gap-2">
-              {flatItems.filter(item => !['', 'team', 'calendar', 'updates', 'documents'].includes(item.id)).map(item => {
-                const href = `${basePath}${item.id ? '/' + item.id : ''}`;
-                const isActive = item.id === ''
-                  ? pathname === href
-                  : pathname === href || pathname.startsWith(href + '/');
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.id}
-                    href={href}
-                    onClick={() => setIsOpen(false)}
-                    className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl border text-center transition-all ${
-                      isActive
-                        ? 'bg-[#0A1E3D] text-white border-[#C5A059] shadow-sm'
-                        : 'bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100'
-                    }`}
-                  >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 ${
-                      isActive ? 'bg-[#C5A059]' : 'bg-[#0A1E3D]'
-                    }`}>
-                      <Icon size={16} strokeWidth={0} fill="currentColor" className="text-white fill-current" />
-                    </div>
-                    <span className="text-[10px] font-semibold leading-tight truncate max-w-full uppercase tracking-wider">{item.label}</span>
-                  </Link>
-                );
-              })}
+            <div className="p-4 space-y-1">
+              {flatItems.map(item => (
+                <NavItem
+                  key={item.id}
+                  item={item}
+                  basePath={basePath}
+                  pathname={pathname}
+                  onClick={() => setIsOpen(false)}
+                />
+              ))}
             </div>
 
             <div className="px-4 pb-5">
