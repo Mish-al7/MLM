@@ -78,7 +78,7 @@ export async function seedIfNeeded() {
 
     // 3. Create default Dashboard Banners
     const defaultBanners = [
-      { id: 1, imageUrl: 'https://images.unsplash.com/photo-1542744173-8e0856d116db?q=80&w=800&auto=format&fit=crop', altText: 'Banner Slot 1' },
+      { id: 1, imageUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=800&auto=format&fit=crop', altText: 'Banner Slot 1' },
       { id: 2, imageUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800&auto=format&fit=crop', altText: 'Banner Slot 2' }
     ];
     const DashboardBanner = mongoose.models.DashboardBanner || mongoose.model('DashboardBanner', new mongoose.Schema({ banners: Array }, { strict: false }));

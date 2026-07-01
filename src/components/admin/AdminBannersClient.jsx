@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
-import { Upload, Save, CheckCircle, Image as ImageIcon, AlertCircle } from 'lucide-react';
+import { 
+  Upload, Save, CheckCircle, Image as ImageIcon, AlertCircle,
+  Plus, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight
+} from 'lucide-react';
 import PageHeader from '@/components/shared/PageHeader';
 
 const isValidUrl = (url) => {
@@ -17,8 +20,7 @@ const isValidUrl = (url) => {
 
 export default function AdminBannersClient() {
   const [banners, setBanners] = useState([
-    { id: 1, imageUrl: '', altText: 'Banner Slot 1' },
-    { id: 2, imageUrl: '', altText: 'Banner Slot 2' }
+    { id: 1, imageUrl: '', altText: 'Banner Slot 1' }
   ]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -26,11 +28,14 @@ export default function AdminBannersClient() {
   const [error, setError] = useState('');
   const [uploadingSlot, setUploadingSlot] = useState(null);
 
+  // Live preview mockup carousel state
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   useEffect(() => {
     fetch('/api/dashboard-banners')
       .then(res => res.json())
       .then(json => {
-        if (json.success && Array.isArray(json.data) && json.data.length === 2) {
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
           setBanners(json.data);
         }
       })
@@ -43,6 +48,38 @@ export default function AdminBannersClient() {
 
   const handleUpdateField = (id, field, value) => {
     setBanners(prev => prev.map(b => b.id === id ? { ...b, [field]: value } : b));
+    setSaved(false);
+  };
+
+  const handleAddBanner = () => {
+    if (banners.length >= 5) {
+      setError('Maximum of 5 banner slides allowed.');
+      return;
+    }
+    const newId = banners.length > 0 ? Math.max(...banners.map(b => b.id)) + 1 : 1;
+    setBanners(prev => [...prev, { id: newId, imageUrl: '', altText: `Banner Slot ${newId}` }]);
+    setSaved(false);
+    setError('');
+  };
+
+  const handleRemoveBanner = (id) => {
+    if (banners.length <= 1) {
+      setError('You must keep at least one banner slide.');
+      return;
+    }
+    setBanners(prev => prev.filter(b => b.id !== id));
+    setSaved(false);
+    setError('');
+  };
+
+  const handleMoveBanner = (index, direction) => {
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= banners.length) return;
+    const updated = [...banners];
+    const temp = updated[index];
+    updated[index] = updated[newIndex];
+    updated[newIndex] = temp;
+    setBanners(updated);
     setSaved(false);
   };
 
@@ -96,6 +133,14 @@ export default function AdminBannersClient() {
     setError('');
     setSaved(false);
 
+    // Validate that all slides have an image URL
+    const invalidBanners = banners.filter(b => !b.imageUrl.trim());
+    if (invalidBanners.length > 0) {
+      setError('All banner slides must contain an image. Please upload an image or enter a URL.');
+      setSaving(false);
+      return;
+    }
+
     try {
       const res = await fetch('/api/dashboard-banners', {
         method: 'PATCH',
@@ -114,11 +159,25 @@ export default function AdminBannersClient() {
     }
   };
 
+  // Preview carousel active slides
+  const activeBanners = useMemo(() => banners.filter(b => b.imageUrl), [banners]);
+
+  useEffect(() => {
+    if (activeBanners.length <= 1) {
+      setCurrentSlide(0);
+      return;
+    }
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % activeBanners.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [activeBanners.length]);
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="Dashboard Banners"
-        subtitle="Manage and upload the dual promotional banners displayed on the Member Dashboard."
+        subtitle="Manage and configure up to 5 promotional banners displayed in a premium carousel on the Member Dashboard."
       />
 
       {loading ? (
@@ -131,95 +190,120 @@ export default function AdminBannersClient() {
           {/* Left Column: Management Slots */}
           <div className="xl:col-span-7 space-y-6">
             
-            {/* Slot 1 Uploader */}
-            <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] space-y-4">
-              <div className="flex justify-between items-center border-b border-slate-50 pb-3">
-                <h3 className="text-sm font-bold text-slate-700">Banner Slot 1</h3>
-                <span className="text-[10px] bg-blue-50 text-[#0A1E3D] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">Left Display</span>
-              </div>
-              
-              {/* Drag and Drop Zone */}
-              <div 
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, 1)}
-                className={`border-2 border-dashed border-[#C5A059]/20 hover:border-[#C5A059]/50 transition-colors bg-[#FBF9F4]/40 rounded-xl p-6 text-center cursor-pointer relative ${
-                  uploadingSlot === 1 ? 'opacity-60 pointer-events-none' : ''
-                }`}
-              >
-                <input 
-                  type="file" 
-                  accept="image/*"
-                  onChange={(e) => handleFileChange(1, e.target.files?.[0])}
-                  disabled={uploadingSlot === 1}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                <div className="space-y-2">
-                  <Upload size={24} className={`mx-auto ${uploadingSlot === 1 ? 'animate-bounce text-[#C5A059]' : 'text-slate-400'}`} />
-                  <p className="text-xs text-slate-600 font-semibold">
-                    {uploadingSlot === 1 ? 'Uploading to S3...' : 'Drag & Drop Image or Click to Browse'}
-                  </p>
-                  <p className="text-[10px] text-slate-400 font-medium">Supports PNG, JPG, GIF or WebP (Stores directly in AWS S3)</p>
-                </div>
-              </div>
-
-
-              {/* Alt Text */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Alt Text (Accessibility)</label>
-                <input 
-                  type="text"
-                  placeholder="Alternative text describing the banner"
-                  value={banners[0].altText}
-                  onChange={(e) => handleUpdateField(1, 'altText', e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-150 bg-white text-xs focus:outline-none focus:border-[#C5A059] transition-colors"
-                />
-              </div>
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider">
+                Slides Configuration ({banners.length} / 5)
+              </h2>
             </div>
 
-            {/* Slot 2 Uploader */}
-            <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] space-y-4">
-              <div className="flex justify-between items-center border-b border-slate-50 pb-3">
-                <h3 className="text-sm font-bold text-slate-700">Banner Slot 2</h3>
-                <span className="text-[10px] bg-blue-50 text-[#0A1E3D] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">Right Display</span>
-              </div>
-              
-              {/* Drag and Drop Zone */}
+            {banners.map((b, index) => (
               <div 
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, 2)}
-                className={`border-2 border-dashed border-[#C5A059]/20 hover:border-[#C5A059]/50 transition-colors bg-[#FBF9F4]/40 rounded-xl p-6 text-center cursor-pointer relative ${
-                  uploadingSlot === 2 ? 'opacity-60 pointer-events-none' : ''
-                }`}
+                key={b.id} 
+                className="bg-white rounded-2xl border border-slate-100 p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] space-y-4 relative"
               >
-                <input 
-                  type="file" 
-                  accept="image/*"
-                  onChange={(e) => handleFileChange(2, e.target.files?.[0])}
-                  disabled={uploadingSlot === 2}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                <div className="space-y-2">
-                  <Upload size={24} className={`mx-auto ${uploadingSlot === 2 ? 'animate-bounce text-[#C5A059]' : 'text-slate-400'}`} />
-                  <p className="text-xs text-slate-600 font-semibold">
-                    {uploadingSlot === 2 ? 'Uploading to S3...' : 'Drag & Drop Image or Click to Browse'}
-                  </p>
-                  <p className="text-[10px] text-slate-400 font-medium">Supports PNG, JPG, GIF or WebP (Stores directly in AWS S3)</p>
+                <div className="flex justify-between items-center border-b border-slate-50 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-[#0A1E3D] bg-blue-50 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      Slide #{index + 1}
+                    </span>
+                    <span className="text-xs text-slate-400 truncate max-w-[200px] sm:max-w-xs font-semibold">
+                      {b.altText || 'Untitled Slide'}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    {/* Move Up */}
+                    <button
+                      onClick={() => handleMoveBanner(index, 'up')}
+                      disabled={index === 0}
+                      className="p-1 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer"
+                      title="Move Up"
+                    >
+                      <ChevronUp size={16} />
+                    </button>
+                    {/* Move Down */}
+                    <button
+                      onClick={() => handleMoveBanner(index, 'down')}
+                      disabled={index === banners.length - 1}
+                      className="p-1 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer"
+                      title="Move Down"
+                    >
+                      <ChevronDown size={16} />
+                    </button>
+                    {/* Remove */}
+                    <button
+                      onClick={() => handleRemoveBanner(b.id)}
+                      disabled={banners.length <= 1}
+                      className="p-1.5 rounded text-red-500 hover:text-red-700 hover:bg-red-50 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer"
+                      title="Remove Slide"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Drag and Drop Zone */}
+                <div 
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, b.id)}
+                  className={`border-2 border-dashed border-[#C5A059]/20 hover:border-[#C5A059]/50 transition-colors bg-[#FBF9F4]/40 rounded-xl p-5 text-center cursor-pointer relative ${
+                    uploadingSlot === b.id ? 'opacity-60 pointer-events-none' : ''
+                  }`}
+                >
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    onChange={(e) => handleFileChange(b.id, e.target.files?.[0])}
+                    disabled={uploadingSlot === b.id}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <div className="space-y-1.5">
+                    <Upload size={20} className={`mx-auto ${uploadingSlot === b.id ? 'animate-bounce text-[#C5A059]' : 'text-slate-400'}`} />
+                    <p className="text-xs text-slate-600 font-semibold">
+                      {uploadingSlot === b.id ? 'Uploading to S3...' : 'Drag & Drop Image or Click to Browse'}
+                    </p>
+                    <p className="text-[9px] text-slate-400 font-medium">Supports PNG, JPG, GIF or WebP</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Image URL input */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Or Image URL</label>
+                    <input 
+                      type="text"
+                      placeholder="https://example.com/image.jpg"
+                      value={b.imageUrl}
+                      onChange={(e) => handleUpdateField(b.id, 'imageUrl', e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-150 bg-white text-xs focus:outline-none focus:border-[#C5A059] transition-colors"
+                    />
+                  </div>
+
+                  {/* Alt Text */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Alt Text (Accessibility)</label>
+                    <input 
+                      type="text"
+                      placeholder="Alternative text describing the banner"
+                      value={b.altText}
+                      onChange={(e) => handleUpdateField(b.id, 'altText', e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-150 bg-white text-xs focus:outline-none focus:border-[#C5A059] transition-colors"
+                    />
+                  </div>
                 </div>
               </div>
+            ))}
 
-
-              {/* Alt Text */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Alt Text (Accessibility)</label>
-                <input 
-                  type="text"
-                  placeholder="Alternative text describing the banner"
-                  value={banners[1].altText}
-                  onChange={(e) => handleUpdateField(2, 'altText', e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-150 bg-white text-xs focus:outline-none focus:border-[#C5A059] transition-colors"
-                />
-              </div>
-            </div>
+            {/* Add Slide Button */}
+            {banners.length < 5 && (
+              <button
+                onClick={handleAddBanner}
+                className="w-full py-4 border-2 border-dashed border-slate-200 hover:border-slate-400 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-800 bg-slate-50/50 hover:bg-slate-50 transition-all cursor-pointer"
+              >
+                <Plus size={16} />
+                <span>Add Banner Slide ({banners.length} / 5)</span>
+              </button>
+            )}
 
             {error && (
               <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg border border-red-100 flex items-center gap-1.5">
@@ -228,11 +312,11 @@ export default function AdminBannersClient() {
             )}
 
             {/* Action buttons */}
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-3 pt-2">
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10 disabled:opacity-50 whitespace-nowrap"
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shadow-blue-500/10 disabled:opacity-50 whitespace-nowrap cursor-pointer"
               >
                 {saving ? (
                   <>Publishing...</>
@@ -248,11 +332,11 @@ export default function AdminBannersClient() {
 
           {/* Right Column: Live Miniature Mockup Preview */}
           <div className="xl:col-span-5 space-y-4">
-            <div className="bg-[#FBF9F4] rounded-2xl border border-slate-200/60 p-4 shadow-sm relative">
+            <div className="bg-[#FBF9F4] rounded-2xl border border-slate-200/60 p-4 shadow-sm relative sticky top-6">
               <span className="absolute top-3 right-3 text-[9px] bg-amber-500/10 text-amber-600 font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border border-amber-500/20">
                 Live Mockup
               </span>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Member Dashboard Grid Preview</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Dashboard Carousel Preview</h4>
               
               <div className="bg-white border border-slate-100 rounded-xl p-3 shadow-inner space-y-3">
                 {/* Greeting Card Mockup */}
@@ -260,52 +344,81 @@ export default function AdminBannersClient() {
                   <div className="w-16 h-2 bg-slate-200 rounded" />
                 </div>
 
-                {/* Grid layout containing Slot 1 and Slot 2 side-by-side */}
-                <div className="grid grid-cols-2 gap-2 h-44">
-                  {/* Slot 1 mockup */}
-                  <div className="border border-slate-100 rounded-lg overflow-hidden bg-slate-50 relative flex items-center justify-center">
-                    {isValidUrl(banners[0].imageUrl) ? (
-                      <Image 
-                        src={banners[0].imageUrl} 
-                        alt="Slot 1 Preview" 
-                        fill 
-                        className="object-cover"
-                        unoptimized
-                      />
-                    ) : (
-                      <div className="text-center text-slate-350 p-2">
-                        <ImageIcon size={16} className="mx-auto mb-1" />
-                        <span className="text-[8px] block">No Image Slot 1</span>
+                {/* Miniature Carousel Container */}
+                <div className="relative group/mockup w-full flex justify-center items-center">
+                  {activeBanners.length > 0 ? (
+                    <>
+                      {/* Slides Container using Fade Transition */}
+                      <div className="relative w-full">
+                        {activeBanners.map((b, idx) => (
+                          <div 
+                            key={b.id || idx} 
+                            className={`w-full flex justify-center items-center transition-all duration-500 ease-in-out ${
+                              currentSlide === idx 
+                                ? 'relative opacity-100 z-10' 
+                                : 'absolute top-0 left-0 w-full h-full opacity-0 pointer-events-none z-0'
+                            }`}
+                          >
+                            <img 
+                              src={b.imageUrl} 
+                              alt="Slot Preview" 
+                              className="max-h-[140px] w-auto h-auto block select-none rounded-lg border border-slate-150 shadow-sm"
+                            />
+                          </div>
+                        ))}
                       </div>
-                    )}
-                  </div>
 
-                  {/* Slot 2 mockup */}
-                  <div className="border border-slate-100 rounded-lg overflow-hidden bg-slate-50 relative flex items-center justify-center">
-                    {isValidUrl(banners[1].imageUrl) ? (
-                      <Image 
-                        src={banners[1].imageUrl} 
-                        alt="Slot 2 Preview" 
-                        fill 
-                        className="object-cover"
-                        unoptimized
-                      />
-                    ) : (
-                      <div className="text-center text-slate-350 p-2">
-                        <ImageIcon size={16} className="mx-auto mb-1" />
-                        <span className="text-[8px] block">No Image Slot 2</span>
-                      </div>
-                    )}
-                  </div>
+                      {/* Mockup Arrows */}
+                      {activeBanners.length > 1 && (
+                        <>
+                          <button
+                            onClick={() => setCurrentSlide((prev) => (prev - 1 + activeBanners.length) % activeBanners.length)}
+                            className="absolute left-1.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/90 text-slate-800 shadow-sm flex items-center justify-center opacity-0 group-hover/mockup:opacity-100 transition-opacity z-20 cursor-pointer border border-slate-100"
+                            aria-label="Previous"
+                          >
+                            <ChevronLeft size={12} />
+                          </button>
+                          <button
+                            onClick={() => setCurrentSlide((prev) => (prev + 1) % activeBanners.length)}
+                            className="absolute right-1.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/90 text-slate-800 shadow-sm flex items-center justify-center opacity-0 group-hover/mockup:opacity-100 transition-opacity z-20 cursor-pointer border border-slate-100"
+                            aria-label="Next"
+                          >
+                            <ChevronRight size={12} />
+                          </button>
+                        </>
+                      )}
+
+                      {/* Mockup Dots */}
+                      {activeBanners.length > 1 && (
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-20 bg-slate-900/10 backdrop-blur-sm px-1.5 py-0.5 rounded-full">
+                          {activeBanners.map((_, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => setCurrentSlide(idx)}
+                              className={`h-1 rounded-full transition-all cursor-pointer ${
+                                currentSlide === idx ? 'bg-amber-500 w-3' : 'bg-white/80 hover:bg-white w-1'
+                              }`}
+                              aria-label={`Slide ${idx + 1}`}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="text-center text-slate-350 p-6 w-full border border-slate-100 rounded-lg bg-slate-50">
+                      <ImageIcon size={16} className="mx-auto mb-1" />
+                      <span className="text-[8px] block">No Banner Images Uploaded</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Milestone Progress Bar Mockup */}
-                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100 space-y-2">
+                <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-100 space-y-1.5">
                   <div className="flex justify-between">
-                    <div className="w-12 h-2 bg-slate-200 rounded" />
-                    <div className="w-8 h-2 bg-slate-200 rounded" />
+                    <div className="w-10 h-1.5 bg-slate-200 rounded" />
+                    <div className="w-6 h-1.5 bg-slate-200 rounded" />
                   </div>
-                  <div className="w-full h-1.5 bg-slate-200 rounded-full" />
+                  <div className="w-full h-1 bg-slate-200 rounded-full" />
                 </div>
               </div>
             </div>

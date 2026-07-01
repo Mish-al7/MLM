@@ -4,7 +4,7 @@ import DashboardBanner from '@/models/DashboardBanner';
 import { getSessionUser } from '@/lib/auth';
 
 const DEFAULT_BANNERS = [
-  { id: 1, imageUrl: 'https://images.unsplash.com/photo-1542744173-8e0856d116db?q=80&w=800&auto=format&fit=crop', altText: 'Banner Slot 1' },
+  { id: 1, imageUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=800&auto=format&fit=crop', altText: 'Banner Slot 1' },
   { id: 2, imageUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800&auto=format&fit=crop', altText: 'Banner Slot 2' }
 ];
 
@@ -32,8 +32,8 @@ export async function PATCH(req) {
     }
 
     const { banners } = await req.json();
-    if (!Array.isArray(banners) || banners.length !== 2) {
-      return NextResponse.json({ error: 'Must provide exactly two banners' }, { status: 400 });
+    if (!Array.isArray(banners) || banners.length < 1 || banners.length > 5) {
+      return NextResponse.json({ error: 'Must provide between 1 and 5 banners' }, { status: 400 });
     }
 
     const doc = await DashboardBanner.findOneAndUpdate(

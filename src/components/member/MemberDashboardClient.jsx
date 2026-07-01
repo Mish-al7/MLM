@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { 
   Award, Edit2, TrendingUp, DollarSign, Calendar as CalendarIcon, 
   MapPin, CheckCircle, Flame, ShieldAlert, Navigation, ArrowUpRight,
-  Mail, Phone
+  Mail, Phone, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -16,6 +16,20 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
   const [leftBV, setLeftBV] = useState(user.leftBV || 0);
   const [rightBV, setRightBV] = useState(user.rightBV || 0);
   const router = useRouter();
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const activeBanners = useMemo(() => banners.filter(b => b.imageUrl), [banners]);
+
+  useEffect(() => {
+    if (activeBanners.length <= 1) {
+      setCurrentSlide(0);
+      return;
+    }
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % activeBanners.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [activeBanners.length]);
 
   const handleUpdateSelfBv = async (e) => {
     e.preventDefault();
@@ -222,20 +236,64 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
         )}
       </div>
 
-      {/* Dual Banner Display Grid replacing Chart and Milestone cards */}
-      {banners.filter(b => b.imageUrl).length > 0 && (
-        <div className={`grid gap-6 w-full ${
-          banners.filter(b => b.imageUrl).length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'
-        }`}>
-          {banners.filter(b => b.imageUrl).map((b) => (
-            <div key={b.id} className="w-full rounded-xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50 flex items-center justify-center">
-              <img
-                src={b.imageUrl}
-                alt={b.altText || `Promotional Banner ${b.id}`}
-                className="w-full h-auto object-contain max-h-[480px] rounded-xl"
-              />
+      {/* Dynamic Banner Carousel (Constrained Height, Native Aspect Ratio, No Crop, No Empty Spaces) */}
+      {activeBanners.length > 0 && (
+        <div className="relative group w-full">
+          {/* Slides Container using Fade Transition */}
+          <div className="relative w-full">
+            {activeBanners.map((b, idx) => (
+              <div 
+                key={b.id || idx} 
+                className={`w-full flex justify-center items-center transition-all duration-500 ease-in-out ${
+                  currentSlide === idx 
+                    ? 'relative opacity-100 z-10' 
+                    : 'absolute top-0 left-0 w-full h-full opacity-0 pointer-events-none z-0'
+                }`}
+              >
+                <img
+                  src={b.imageUrl}
+                  alt={b.altText || `Promotional Banner ${b.id}`}
+                  className="max-h-[200px] sm:max-h-[280px] md:max-h-[360px] lg:max-h-[420px] w-auto h-auto block select-none rounded-2xl shadow-sm border border-slate-100/60"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Navigation Arrows */}
+          {activeBanners.length > 1 && (
+            <>
+              <button
+                onClick={() => setCurrentSlide((prev) => (prev - 1 + activeBanners.length) % activeBanners.length)}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/85 hover:bg-white text-slate-800 shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-20 cursor-pointer border border-slate-100/60"
+                aria-label="Previous slide"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={() => setCurrentSlide((prev) => (prev + 1) % activeBanners.length)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/85 hover:bg-white text-slate-800 shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-20 cursor-pointer border border-slate-100/60"
+                aria-label="Next slide"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </>
+          )}
+
+          {/* Indicators (Dots) */}
+          {activeBanners.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-20 bg-slate-900/10 backdrop-blur-sm px-2.5 py-1 rounded-full">
+              {activeBanners.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentSlide(idx)}
+                  className={`h-2 rounded-full transition-all cursor-pointer ${
+                    currentSlide === idx ? 'bg-amber-500 w-5' : 'bg-white/80 hover:bg-white w-2'
+                  }`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
             </div>
-          ))}
+          )}
         </div>
       )}
 
