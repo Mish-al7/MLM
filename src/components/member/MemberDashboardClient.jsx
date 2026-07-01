@@ -182,9 +182,9 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
         {/* Current Rank Milestone Indicator Card */}
         <div className="glass-panel p-3 rounded-xl relative border border-zinc-800 bg-zinc-900 flex justify-between items-start">
           <div>
-            <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Current Rank Milestone</p>
-            <h3 className="text-lg font-bold text-zinc-200 mt-0.5 uppercase tracking-wide">{user.rank || 'Associate'}</h3>
-            <p className="text-[10px] text-amber-500 mt-0.5 font-semibold">Reward: {user.reward || 'None'}</p>
+            <p className="text-[10px] font-bold tracking-wider text-[#0A1E3D] uppercase">Current Rank Milestone</p>
+            <h3 className="text-lg font-bold text-[#0A1E3D] mt-0.5 uppercase tracking-wide !text-[#0A1E3D]">{user.rank || 'Associate'}</h3>
+            <p className="text-[10px] text-[#0A1E3D]/80 mt-0.5 font-semibold">Reward: {user.reward || 'None'}</p>
           </div>
           <div className="w-8 h-8 rounded-full bg-[#0A1E3D] flex items-center justify-center flex-shrink-0">
             <Award size={16} strokeWidth={0} fill="currentColor" className="text-white fill-current w-4 h-4 flex-shrink-0" />
@@ -194,11 +194,11 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
         {/* Next Rank Milestone Card */}
         <div className="glass-panel p-3 rounded-xl relative border border-zinc-800 bg-zinc-900 flex justify-between items-start">
           <div>
-            <p className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">Next Rank Milestone</p>
-            <h3 className="text-lg font-bold text-zinc-200 mt-0.5 uppercase tracking-wide">
+            <p className="text-[10px] font-bold tracking-wider text-[#0A1E3D] uppercase">Next Rank Milestone</p>
+            <h3 className="text-lg font-bold text-[#0A1E3D] mt-0.5 uppercase tracking-wide !text-[#0A1E3D]">
               {milestoneProgress?.nextRank?.name || 'Max Rank Reached'}
             </h3>
-            <p className="text-[10px] text-cyan-500 mt-0.5 font-semibold">
+            <p className="text-[10px] text-[#0A1E3D]/80 mt-0.5 font-semibold">
               Reward: {milestoneProgress?.nextRank?.reward || 'None'}
             </p>
           </div>
@@ -318,31 +318,44 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
                 />
                 <div className="min-w-0 flex-1 space-y-1">
                   <h4 className="text-sm font-black text-black uppercase tracking-wider truncate">{admin.name}</h4>
-                  <p className="text-xs text-slate-500 font-medium flex items-center gap-2 truncate">
-                    <Mail size={13} className="text-black flex-shrink-0" />
-                    <a href={`mailto:${admin.email}`} className="text-[#2563eb] hover:text-[#1d4ed8] font-bold hover:underline">
+                  <div className="text-xs text-slate-500 font-medium flex items-center gap-2 truncate">
+                    <Mail size={13} className="text-[#0A1E3D] flex-shrink-0" />
+                    <a href={`mailto:${admin.email}`} className="text-[#0A1E3D] hover:text-[#001B3A] font-bold hover:underline">
                       {admin.email}
                     </a>
-                  </p>
+                  </div>
                   {(admin.phone || admin.phone2) && (
-                    <p className="text-sm text-slate-500 flex items-center gap-2">
-                      <Phone size={13} className="text-black flex-shrink-0" />
+                    <div className="text-sm text-slate-500 flex items-center gap-2 flex-wrap">
+                      <Phone size={13} className="text-[#0A1E3D] flex-shrink-0" />
                       {admin.phone ? (
-                        <a href={`tel:${admin.phone}`} className="text-[#2563eb] hover:text-[#1d4ed8] font-bold hover:underline">
+                        <a href={`tel:${admin.phone}`} className="text-[#0A1E3D] hover:text-[#001B3A] font-bold hover:underline">
                           {admin.phone}
                         </a>
                       ) : (
-                        <span className="text-[#2563eb] font-bold">N/A</span>
+                        <span className="text-[#0A1E3D] font-bold">N/A</span>
                       )}
                       {admin.phone2 && (
                         <>
                           <span className="text-slate-400">{' / '}</span>
-                          <a href={`tel:${admin.phone2}`} className="text-[#2563eb] hover:text-[#1d4ed8] font-bold hover:underline">
+                          <a href={`tel:${admin.phone2}`} className="text-[#0A1E3D] hover:text-[#001B3A] font-bold hover:underline">
                             {admin.phone2}
                           </a>
                         </>
                       )}
-                    </p>
+                      {admin.phone && (
+                        <a
+                          href={`https://wa.me/${admin.phone.replace(/[^0-9]/g, '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center p-1 rounded hover:bg-emerald-50 transition-colors ml-1"
+                          title="Chat on WhatsApp"
+                        >
+                          <svg className="w-4.5 h-4.5 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.45L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.799-4.394 9.802-9.799.002-2.618-1.01-5.08-2.859-6.93C16.37 2.025 13.91 1.013 11.299 1.013c-5.405 0-9.801 4.393-9.804 9.799 0 1.91.498 3.779 1.455 5.414L1.93 21.98l5.858-1.534L6.647 19.15zm9.582-4.704c-.266-.134-1.58-.78-1.821-.867-.243-.088-.419-.133-.596.13-.176.265-.685.867-.839 1.045-.156.177-.311.2-.577.067-.266-.133-1.127-.415-2.148-1.326-.79-.704-1.326-1.574-1.48-1.84-.155-.267-.017-.411.117-.544.12-.12.266-.31.4-.464.133-.155.177-.265.266-.443.089-.176.044-.331-.022-.464-.067-.132-.596-1.437-.816-1.967-.215-.518-.432-.447-.597-.456-.153-.008-.33-.009-.507-.009-.177 0-.464.067-.707.331-.243.265-.929.907-.929 2.21 0 1.302.946 2.56 1.078 2.738.133.177 1.86 2.84 4.507 3.985.63.272 1.12.435 1.503.556.633.201 1.21.173 1.666.105.508-.076 1.58-.646 1.802-1.238.222-.593.222-1.101.156-1.21-.067-.105-.243-.17-.509-.304z"/>
+                          </svg>
+                        </a>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>

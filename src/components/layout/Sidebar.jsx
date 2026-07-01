@@ -162,10 +162,15 @@ export default function Sidebar({ user }) {
     <>
       {/* ── Mobile header ────────────────────────────────────────────────────── */}
       <header className="fixed top-0 left-0 w-full h-14 bg-white/80 backdrop-blur-md border-b border-[#C5A059]/20 flex items-center justify-between px-4 z-50 md:hidden">
-        <div>
+        <div className="flex items-center gap-2">
           <h2 className="text-base font-black tracking-widest font-heading text-[#001B3A]">
             ALLIANZA
           </h2>
+          <img
+            src="/logoallianza.png"
+            alt="Allianza Logo"
+            className="w-6 h-6 object-contain flex-shrink-0"
+          />
         </div>
         <div className="flex items-center gap-2">
           <Link href={profileHref} className="relative flex-shrink-0">
@@ -333,11 +338,18 @@ export default function Sidebar({ user }) {
       <aside className="hidden md:flex w-[245px] flex-col bg-white border-r border-[#C5A059]/25 z-20 h-screen shrink-0">
 
         {/* Brand */}
-        <div className="px-5 pt-5 pb-4 border-b border-[#C5A059]/20">
-          <h2 className="text-[20px] font-bold tracking-widest font-heading text-[#001B3A] leading-none">
-            ALLIANZA
-          </h2>
-          <p className="text-[8px] text-[#C5A059] uppercase tracking-[0.2em] mt-1 font-semibold">Leadership Platform</p>
+        <div className="px-5 pt-4 pb-3 border-b border-[#C5A059]/20 flex items-center justify-between">
+          <div>
+            <h2 className="text-[20px] font-bold tracking-widest font-heading text-[#001B3A] leading-none">
+              ALLIANZA
+            </h2>
+            <p className="text-[8px] text-[#C5A059] uppercase tracking-[0.2em] mt-1 font-semibold">Leadership Platform</p>
+          </div>
+          <img
+            src="/logoallianza.png"
+            alt="Allianza Logo"
+            className="w-10 h-10 object-contain ml-2 flex-shrink-0"
+          />
         </div>
 
         {/* Flat navigation list */}

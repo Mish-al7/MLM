@@ -15,6 +15,9 @@ const cinzel = Cinzel({
 export const metadata = {
   title: "Allianza - Leadership Platform",
   description: "Secure organization hierarchy and business metrics management platform.",
+  icons: {
+    icon: "/logoallianza.png",
+  },
 };
 
 export default function RootLayout({ children }) {

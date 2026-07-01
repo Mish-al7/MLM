@@ -10,10 +10,10 @@ const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'Ju
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const CATEGORY_CONFIG = {
-  personal: { label: 'Personal', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', dot: 'bg-emerald-400' },
-  work:     { label: 'Work',     color: 'bg-blue-500/20 text-blue-400 border-blue-500/30',         dot: 'bg-blue-400' },
-  meeting:  { label: 'Meeting',  color: 'bg-amber-500/20 text-amber-400 border-amber-500/30',       dot: 'bg-amber-400' },
-  urgent:   { label: 'Urgent',   color: 'bg-rose-500/20 text-rose-400 border-rose-500/30',         dot: 'bg-rose-400' },
+  personal: { label: 'Personal', color: 'bg-emerald-50 text-emerald-700 border-emerald-200', dot: 'bg-emerald-500' },
+  work:     { label: 'Work',     color: 'bg-blue-50 text-blue-700 border-blue-200',         dot: 'bg-blue-500' },
+  meeting:  { label: 'Meeting',  color: 'bg-amber-50 text-amber-700 border-amber-200',       dot: 'bg-amber-500' },
+  urgent:   { label: 'Urgent',   color: 'bg-rose-50 text-rose-700 border-rose-200',         dot: 'bg-rose-500' },
 };
 
 export default function CalendarView({ isAdmin = false }) {
@@ -410,7 +410,9 @@ export default function CalendarView({ isAdmin = false }) {
                             <div
                               key={note._id}
                               className={`p-3 rounded-xl border transition-all ${
-                                note.isCompleted ? 'bg-zinc-900/30 border-zinc-800/50 opacity-60' : 'bg-zinc-900/60 border-zinc-800'
+                                note.isCompleted 
+                                  ? 'bg-slate-50/50 border-slate-100 opacity-60' 
+                                  : 'bg-white border-slate-200/80 shadow-sm'
                               }`}
                             >
                               {isEditingThis ? (
@@ -419,15 +421,15 @@ export default function CalendarView({ isAdmin = false }) {
                                     value={editingNote.content}
                                     onChange={e => setEditingNote({ ...editingNote, content: e.target.value })}
                                     rows={2}
-                                    className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-2 py-1.5 text-xs text-white resize-none focus:outline-none focus:border-amber-500"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800 placeholder-slate-400 resize-none focus:outline-none focus:ring-1 focus:ring-[#0A1E3D] focus:border-[#0A1E3D] transition-all"
                                   />
                                   <div className="flex gap-1 flex-wrap">
                                     {Object.entries(CATEGORY_CONFIG).map(([cat, cfg]) => (
                                       <button
                                         key={cat}
                                         onClick={() => setEditingNote({ ...editingNote, category: cat })}
-                                        className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border transition-all ${
-                                          editingNote.category === cat ? cfg.color : 'bg-zinc-800 text-zinc-500 border-zinc-700'
+                                        className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border transition-all cursor-pointer ${
+                                          editingNote.category === cat ? cfg.color : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100 hover:border-slate-300'
                                         }`}
                                       >
                                         {cfg.label}
@@ -435,10 +437,17 @@ export default function CalendarView({ isAdmin = false }) {
                                     ))}
                                   </div>
                                   <div className="flex gap-1.5">
-                                    <button onClick={handleUpdateNote} disabled={noteLoading} className="flex-1 py-1 rounded-lg bg-amber-500 text-black text-xs font-bold hover:bg-amber-400 transition-colors disabled:opacity-50">
+                                    <button 
+                                      onClick={handleUpdateNote} 
+                                      disabled={noteLoading} 
+                                      className="flex-1 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
+                                    >
                                       Save
                                     </button>
-                                    <button onClick={() => setEditingNote(null)} className="px-3 py-1 rounded-lg bg-zinc-800 text-zinc-400 text-xs hover:text-white transition-colors">
+                                    <button 
+                                      onClick={() => setEditingNote(null)} 
+                                      className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 text-xs hover:bg-slate-200 hover:text-slate-800 transition-colors cursor-pointer"
+                                    >
                                       <X size={12} />
                                     </button>
                                   </div>
@@ -448,9 +457,9 @@ export default function CalendarView({ isAdmin = false }) {
                                   {/* Author info */}
                                   <div className="flex items-center justify-between mb-1.5">
                                     <div className="flex items-center gap-1.5">
-                                      <span className="text-[10px] text-zinc-500">{note.authorName}</span>
+                                      <span className="text-[10px] text-slate-500 font-medium">{note.authorName}</span>
                                       {note.authorRole === 'super_admin' && (
-                                        <span className="text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded-full font-bold">Admin</span>
+                                        <span className="text-[9px] bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/20 px-1.5 py-0.5 rounded-full font-bold">Admin</span>
                                       )}
                                     </div>
                                     <span className={`text-[9px] px-1.5 py-0.5 rounded-full border font-semibold ${catCfg.color}`}>
@@ -466,24 +475,24 @@ export default function CalendarView({ isAdmin = false }) {
                                       className={`mt-0.5 flex-shrink-0 transition-colors ${isOwner ? 'cursor-pointer' : 'cursor-default'}`}
                                     >
                                       {note.isCompleted
-                                        ? <CheckCircle2 size={14} className="text-emerald-400" />
-                                        : <Circle size={14} className="text-zinc-600" />
+                                        ? <CheckCircle2 size={14} className="text-emerald-500" />
+                                        : <Circle size={14} className="text-slate-300 hover:text-[#0A1E3D]" />
                                       }
                                     </button>
-                                    <p className={`text-xs flex-1 leading-relaxed ${note.isCompleted ? 'line-through text-zinc-600' : 'text-zinc-300'}`}>
+                                    <p className={`text-xs flex-1 leading-relaxed ${note.isCompleted ? 'line-through text-slate-400 font-medium' : 'text-slate-700 font-medium'}`}>
                                       {note.content}
                                     </p>
                                     {isOwner && (
                                       <div className="flex gap-1 flex-shrink-0">
                                         <button
                                           onClick={() => setEditingNote({ id: note._id, content: note.content, category: note.category })}
-                                          className="p-1 rounded text-zinc-600 hover:text-amber-400 transition-colors"
+                                          className="p-1 rounded text-slate-400 hover:text-[#0A1E3D] hover:bg-slate-50 transition-colors"
                                         >
                                           <Pencil size={11} />
                                         </button>
                                         <button
                                           onClick={() => handleDeleteNote(note._id)}
-                                          className="p-1 rounded text-zinc-600 hover:text-rose-400 transition-colors"
+                                          className="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-slate-50 transition-colors"
                                         >
                                           <Trash2 size={11} />
                                         </button>
@@ -497,21 +506,21 @@ export default function CalendarView({ isAdmin = false }) {
                         })}
                       </div>
                     ) : (
-                      <div className="p-5 text-center text-zinc-600 border border-dashed border-zinc-800 rounded-xl mb-3">
-                        <StickyNote size={24} className="mx-auto mb-2 text-zinc-700" />
-                        <p className="text-xs">No notes for this date.</p>
+                      <div className="p-6 text-center text-slate-500 bg-slate-50/30 border border-dashed border-slate-200 rounded-xl mb-3">
+                        <StickyNote size={20} className="mx-auto mb-2 text-slate-400" />
+                        <p className="text-xs font-medium text-slate-500">No notes for this date.</p>
                       </div>
                     )}
 
                     {/* Add note form */}
-                    <div className="p-3 rounded-xl bg-zinc-900/40 border border-zinc-800 space-y-2">
-                      <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Add Note</p>
+                    <div className="p-4 rounded-xl bg-white border border-slate-200/80 shadow-sm space-y-3">
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Add Note</p>
                       <textarea
                         value={noteContent}
                         onChange={e => setNoteContent(e.target.value)}
                         placeholder="Write a note for this day..."
                         rows={2}
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-white placeholder-zinc-600 resize-none focus:outline-none focus:border-amber-500 transition-colors"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800 placeholder-slate-400 resize-none focus:outline-none focus:ring-1 focus:ring-[#0A1E3D] focus:border-[#0A1E3D] transition-all"
                       />
                       {/* Category selector */}
                       <div className="flex gap-1 flex-wrap">
@@ -519,8 +528,8 @@ export default function CalendarView({ isAdmin = false }) {
                           <button
                             key={cat}
                             onClick={() => setNoteCategory(cat)}
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border transition-all ${
-                              noteCategory === cat ? cfg.color : 'bg-zinc-800 text-zinc-500 border-zinc-700 hover:border-zinc-600'
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border transition-all cursor-pointer ${
+                              noteCategory === cat ? cfg.color : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100 hover:border-slate-300'
                             }`}
                           >
                             {cfg.label}
@@ -530,7 +539,7 @@ export default function CalendarView({ isAdmin = false }) {
                       <button
                         onClick={handleAddNote}
                         disabled={noteLoading || !noteContent.trim()}
-                        className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-amber-500 text-black text-xs font-bold hover:bg-amber-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-blue-600 text-white text-xs font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                       >
                         <Plus size={12} />
                         Add Note
