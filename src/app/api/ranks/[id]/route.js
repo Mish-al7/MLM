@@ -11,7 +11,7 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
     
     const rank = await Rank.findById(id);
@@ -42,7 +42,7 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
     const rank = await Rank.findById(id);
     if (!rank) {
       return NextResponse.json({ error: 'Rank not found' }, { status: 404 });
