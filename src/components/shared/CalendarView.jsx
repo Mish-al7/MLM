@@ -262,7 +262,9 @@ export default function CalendarView({ isAdmin = false }) {
           {/* Calendar Cells */}
           <div className="grid grid-cols-7 border-t border-slate-100">
             {calendarCells.map((cell, idx) => {
-              const hasEvents = cell.date && eventsByDate[cell.date];
+              const hasEvents = cell.date && eventsByDate[cell.date] && eventsByDate[cell.date].length > 0;
+              const hasNotes = cell.date && notesByDate[cell.date] && notesByDate[cell.date].length > 0;
+              const hasEventsOrNotes = hasEvents || hasNotes;
               const isSelected = cell.date === selectedDate;
               const isTodayCell = isToday(cell);
               const noteDots = cell.date ? getCellDots(cell.date) : [];
@@ -275,11 +277,13 @@ export default function CalendarView({ isAdmin = false }) {
                   className={`relative p-2 flex flex-col justify-between text-left items-stretch min-h-[56px] md:min-h-[80px] transition-all border-b border-slate-100 ${
                     !cell.isCurrentMonth
                       ? 'bg-transparent cursor-default select-none pointer-events-none'
-                      : isTodayCell
-                        ? 'bg-blue-50/50 hover:bg-blue-100/50 cursor-pointer font-bold'
-                        : isSelected
-                          ? 'bg-slate-50 hover:bg-slate-50 cursor-pointer ring-1 ring-blue-100/70'
-                          : 'bg-white hover:bg-slate-50/60 cursor-pointer'
+                      : isSelected
+                        ? 'bg-slate-50 hover:bg-slate-50 cursor-pointer ring-1 ring-blue-100/70'
+                        : hasEventsOrNotes
+                          ? 'bg-pink-100 hover:bg-pink-200 cursor-pointer border-pink-300'
+                          : isTodayCell
+                            ? 'bg-blue-50/50 hover:bg-blue-100/50 cursor-pointer font-bold'
+                            : 'bg-white hover:bg-slate-50/60 cursor-pointer'
                   }`}
                 >
                   <div className="flex justify-between items-start w-full">

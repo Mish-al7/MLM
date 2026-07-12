@@ -161,36 +161,33 @@ export default function Sidebar({ user }) {
   return (
     <>
       {/* ── Mobile header ────────────────────────────────────────────────────── */}
-      <header className="fixed top-0 left-0 w-full h-14 bg-white/80 backdrop-blur-md border-b border-[#C5A059]/20 flex items-center justify-between px-4 z-50 md:hidden">
-        <div className="flex items-center gap-2">
-          <h2 className="text-base font-black tracking-widest font-heading text-[#001B3A]">
-            ALLIANZA
-          </h2>
+      <header className="fixed top-0 left-0 w-full h-14 bg-[#0A1E3D] flex items-center justify-between px-3 z-50 md:hidden">
+        <div className="flex items-center">
           <img
-            src="/logoallianza.png"
+            src="/allianzalogo.png"
             alt="Allianza Logo"
-            className="w-6 h-6 object-contain flex-shrink-0"
+            className="h-12 w-auto object-contain flex-shrink-0"
           />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Link href={profileHref} className="relative flex-shrink-0">
             <img
               src={user.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100'}
               alt={user.name}
-              className="w-8 h-8 rounded-full object-cover border border-[#C5A059]/20 shadow-sm"
+              className="w-8 h-8 rounded-full object-cover border border-[#C5A059]/30 shadow-sm"
             />
           </Link>
           <button
             onClick={handleLogout}
             title="Sign Out"
-            className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg border border-slate-100 transition-colors cursor-pointer"
+            className="p-1.5 text-white hover:text-[#C5A059] transition-colors cursor-pointer flex-shrink-0"
             aria-label="Sign Out"
           >
             <LogOut size={18} strokeWidth={2} />
           </button>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-1.5 text-slate-500 hover:bg-slate-50 rounded-lg border border-slate-100 transition-colors"
+            className="p-1.5 text-white hover:text-[#C5A059] transition-colors flex-shrink-0"
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={18} strokeWidth={2} /> : <Menu size={18} strokeWidth={2} />}
@@ -338,17 +335,11 @@ export default function Sidebar({ user }) {
       <aside className="hidden md:flex w-[245px] flex-col bg-white border-r border-[#C5A059]/25 z-20 h-screen shrink-0">
 
         {/* Brand */}
-        <div className="px-5 pt-4 pb-3 border-b border-[#C5A059]/20 flex items-center justify-between">
-          <div>
-            <h2 className="text-[20px] font-bold tracking-widest font-heading text-[#001B3A] leading-none">
-              ALLIANZA
-            </h2>
-            <p className="text-[8px] text-[#C5A059] uppercase tracking-[0.2em] mt-1 font-semibold">Leadership Platform</p>
-          </div>
+        <div className="p-1 flex items-center justify-center bg-[#0A1E3D]">
           <img
-            src="/logoallianza.png"
+            src="/allianzalogo.png"
             alt="Allianza Logo"
-            className="w-10 h-10 object-contain ml-2 flex-shrink-0"
+            className="h-20 w-auto object-contain flex-shrink-0"
           />
         </div>
 

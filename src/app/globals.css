@@ -97,7 +97,7 @@ td {
 /* Clean Card Styles with thin crisp gold-hued border, no deep drop shadows */
 .glass-panel,
 .bg-zinc-950,
-.bg-white:not(body):not(html):not(aside):not(thead):not(tr) {
+.bg-white:not(body):not(html):not(aside):not(thead):not(tr):not([class*="h-screen"]) {
   background-color: #ffffff !important;
   border: 1px solid rgba(197, 160, 89, 0.2) !important;
   box-shadow: 0 2px 8px rgba(197, 160, 89, 0.04) !important;

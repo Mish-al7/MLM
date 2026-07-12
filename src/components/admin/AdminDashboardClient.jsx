@@ -132,7 +132,7 @@ export default function AdminDashboardClient({
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="flex-1">
           <h1 className="text-xl font-bold text-slate-800">
-            Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'}, {user.name.split(' ')[0]} 👋
+            Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'}, {user.name.split(' ')[0]}
           </h1>
           <p className="text-sm text-slate-400 mt-0.5">Here's what's happening with your team today.</p>
         </div>

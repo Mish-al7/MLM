@@ -16,7 +16,7 @@ export const metadata = {
   title: "Allianza - Leadership Platform",
   description: "Secure organization hierarchy and business metrics management platform.",
   icons: {
-    icon: "/logoallianza.png",
+    icon: "/allianzalogo.png",
   },
 };
 
