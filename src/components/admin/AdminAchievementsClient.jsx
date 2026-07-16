@@ -64,6 +64,7 @@ export default function AdminAchievementsClient({ initialUsers, currentUser, ini
 
   const [loading, setLoading] = useState(false);
   const [rankLoading, setRankLoading] = useState(false);
+  const [syncLoading, setSyncLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -282,7 +283,51 @@ export default function AdminAchievementsClient({ initialUsers, currentUser, ini
     });
   };
 
-  // Filter users list based on selections
+  // Sync All Ranks: Bulk re-evaluate all users' ranks based on BV
+  const handleSyncAllRanks = async () => {
+    if (!confirm('This will re-evaluate all members\' ranks based on their current BV values. Users may be upgraded if they qualify for a higher rank. Continue?')) {
+      return;
+    }
+    setSyncLoading(true);
+    setMessage('');
+    setError('');
+
+    try {
+      const res = await fetch('/api/ranks/sync', {
+        method: 'POST'
+      });
+
+      const json = await res.json();
+      if (res.ok) {
+        const { upgradedCount, upgrades } = json;
+        if (upgradedCount > 0) {
+          const upgradeDetails = upgrades.map(u => `${u.name}: ${u.from} → ${u.to}`).join(', ');
+          setMessage(`Sync complete! ${upgradedCount} user(s) upgraded: ${upgradeDetails}`);
+          // Refresh to get updated user data
+          router.refresh();
+          // Update local state with new ranks
+          const updatedUsers = [...users];
+          upgrades.forEach(upg => {
+            const idx = updatedUsers.findIndex(u => u.userId === upg.userId);
+            if (idx !== -1) {
+              updatedUsers[idx] = { ...updatedUsers[idx], rank: upg.to };
+            }
+          });
+          setUsers(updatedUsers);
+        } else {
+          setMessage('Sync complete. All users are already at their correct rank based on BV.');
+        }
+      } else {
+        setError(json.error || 'Failed to sync ranks.');
+      }
+    } catch (err) {
+      setError('An error occurred during rank sync.');
+    } finally {
+      setSyncLoading(false);
+    }
+  };
+
+  // Filter users list based on selections, sorted by highest rank first
   const filteredUsers = users.filter(u => {
     const matchesRank = selectedRankFilter === 'All' || u.rank === selectedRankFilter;
     const matchesSearch = searchQuery === '' || 
@@ -290,6 +335,10 @@ export default function AdminAchievementsClient({ initialUsers, currentUser, ini
       u.userId.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (u.allianzaId && u.allianzaId.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesRank && matchesSearch;
+  }).sort((a, b) => {
+    const aIdx = ranks.findIndex(r => r.name === a.rank);
+    const bIdx = ranks.findIndex(r => r.name === b.rank);
+    return bIdx - aIdx; // Higher rank index = higher rank, show first
   });
 
   return (
@@ -305,18 +354,32 @@ export default function AdminAchievementsClient({ initialUsers, currentUser, ini
           </p>
         </div>
 
-        {/* Setup Config toggle */}
-        <button
-          onClick={() => {
-            setIsManagingRanks(!isManagingRanks);
-            setMessage('');
-            setError('');
-          }}
-          className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer shadow-md"
-        >
-          <Settings size={14} className="text-amber-500" />
-          <span>{isManagingRanks ? 'Hide Milestones Program Setup' : 'Manage Milestones Program'}</span>
-        </button>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2">
+          {/* Sync All Ranks */}
+          <button
+            onClick={handleSyncAllRanks}
+            disabled={syncLoading}
+            className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer shadow-md disabled:opacity-50"
+            title="Re-evaluate all users' ranks based on current BV values"
+          >
+            <RefreshCw size={14} className={syncLoading ? 'animate-spin' : ''} />
+            <span>{syncLoading ? 'Syncing...' : 'Sync All Ranks'}</span>
+          </button>
+
+          {/* Setup Config toggle */}
+          <button
+            onClick={() => {
+              setIsManagingRanks(!isManagingRanks);
+              setMessage('');
+              setError('');
+            }}
+            className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer shadow-md"
+          >
+            <Settings size={14} className="text-amber-500" />
+            <span>{isManagingRanks ? 'Hide Milestones Program Setup' : 'Manage Milestones Program'}</span>
+          </button>
+        </div>
       </div>
 
       {message && (

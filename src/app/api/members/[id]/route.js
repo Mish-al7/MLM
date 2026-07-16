@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import User from '@/models/User';
 import { getSessionUser, hashPassword } from '@/lib/auth';
+import { evaluateAndUpdateRank } from '@/lib/rankEvaluator';
 
 export async function GET(req, { params }) {
   try {
@@ -83,6 +84,7 @@ export async function PATCH(req, { params }) {
       // If they are self-updating BV (mainly for members)
       const newLeft = leftBV !== undefined ? Number(leftBV) : targetUser.leftBV;
       const newRight = rightBV !== undefined ? Number(rightBV) : targetUser.rightBV;
+      let bvChanged = false;
 
       if (newLeft !== targetUser.leftBV || newRight !== targetUser.rightBV) {
         targetUser.bvHistory.push({
@@ -95,6 +97,12 @@ export async function PATCH(req, { params }) {
         });
         targetUser.leftBV = newLeft;
         targetUser.rightBV = newRight;
+        bvChanged = true;
+      }
+
+      // Auto-evaluate rank based on new BV values
+      if (bvChanged) {
+        await evaluateAndUpdateRank(targetUser, currentUser.userId);
       }
 
       await targetUser.save();
@@ -134,6 +142,7 @@ export async function PATCH(req, { params }) {
       // Business Values change tracking
       const newLeft = leftBV !== undefined ? Number(leftBV) : targetUser.leftBV;
       const newRight = rightBV !== undefined ? Number(rightBV) : targetUser.rightBV;
+      let bvChanged = false;
 
       if (newLeft !== targetUser.leftBV || newRight !== targetUser.rightBV) {
         targetUser.bvHistory.push({
@@ -146,23 +155,33 @@ export async function PATCH(req, { params }) {
         });
         targetUser.leftBV = newLeft;
         targetUser.rightBV = newRight;
+        bvChanged = true;
       }
 
-      // Rank & Reward change tracking
-      const newRank = rank || targetUser.rank;
-      const newReward = reward !== undefined ? reward : targetUser.reward;
+      // If admin explicitly sent a rank, use manual override (existing behavior)
+      // Otherwise, auto-evaluate rank based on BV if BV changed
+      const adminExplicitRank = rank !== undefined && rank !== null && rank !== '';
 
-      if (newRank !== targetUser.rank || newReward !== targetUser.reward) {
-        targetUser.rankHistory.push({
-          oldRank: targetUser.rank,
-          newRank: newRank,
-          reward: newReward,
-          achievementDate: achievementDate ? new Date(achievementDate) : new Date(),
-          updatedBy: currentUser.userId,
-          timestamp: new Date()
-        });
-        targetUser.rank = newRank;
-        targetUser.reward = newReward;
+      if (adminExplicitRank) {
+        // Manual rank override by admin
+        const newRank = rank;
+        const newReward = reward !== undefined ? reward : targetUser.reward;
+
+        if (newRank !== targetUser.rank || newReward !== targetUser.reward) {
+          targetUser.rankHistory.push({
+            oldRank: targetUser.rank,
+            newRank: newRank,
+            reward: newReward,
+            achievementDate: achievementDate ? new Date(achievementDate) : new Date(),
+            updatedBy: currentUser.userId,
+            timestamp: new Date()
+          });
+          targetUser.rank = newRank;
+          targetUser.reward = newReward;
+        }
+      } else if (bvChanged) {
+        // Auto-evaluate rank based on new BV values
+        await evaluateAndUpdateRank(targetUser, currentUser.userId);
       }
 
       // Standard fields updates

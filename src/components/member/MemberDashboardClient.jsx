@@ -41,9 +41,24 @@ export default function MemberDashboardClient({ initialUser, allRanks, initialBa
       });
       const json = await res.json();
       if (res.ok) {
-        alert('Business values updated successfully!');
-        setUser({ ...user, leftBV: json.data.leftBV, rightBV: json.data.rightBV });
+        const d = json.data;
+        const rankChanged = d.rank !== user.rank;
+        setUser({
+          ...user,
+          leftBV: d.leftBV,
+          rightBV: d.rightBV,
+          rank: d.rank,
+          reward: d.reward,
+          upcomingRank: d.upcomingRank,
+          upcomingReward: d.upcomingReward,
+          achievementDate: d.achievementDate
+        });
         setEditMode(false);
+        if (rankChanged) {
+          alert(`🎉 Congratulations! You've been promoted to ${d.rank}! Reward: ${d.reward}`);
+        } else {
+          alert('Business values updated successfully!');
+        }
         router.refresh();
       } else {
         alert(json.error || 'Failed to update');
