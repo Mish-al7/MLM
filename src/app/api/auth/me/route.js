@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import User from '@/models/User';
-import { getSessionUser } from '@/lib/auth';
+import { getSessionUser, isAccountActive } from '@/lib/auth';
 
 export async function GET() {
   try {
@@ -15,6 +15,13 @@ export async function GET() {
     const user = await User.findOne({ userId: session.userId }).lean();
     if (!user) {
       return NextResponse.json({ error: 'User record not found' }, { status: 404 });
+    }
+
+    if (!isAccountActive(user)) {
+      return NextResponse.json(
+        { error: 'Account is not active' },
+        { status: 403 }
+      );
     }
 
     // Attach reporting manager name if exists

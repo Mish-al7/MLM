@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import jwt from 'jsonwebtoken';
 import dbConnect from '@/lib/dbConnect';
 import User from '@/models/User';
 import Otp from '@/models/Otp';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'allianza-leadership-platform-secret-12345';
+import {
+  createAuthToken,
+  isAccountActive,
+  setAuthCookie,
+} from '@/lib/auth';
 
 export async function POST(req) {
   try {
@@ -38,34 +39,22 @@ export async function POST(req) {
       return NextResponse.json({ error: 'User record not found' }, { status: 404 });
     }
 
+    if (!isAccountActive(user)) {
+      return NextResponse.json(
+        { error: 'Account is not active. Ask Super Admin to restore access.' },
+        { status: 403 }
+      );
+    }
+
     // Delete the verified OTP
     await Otp.deleteOne({ _id: otpRecord._id });
 
-    // Generate JWT Token
-    const token = jwt.sign(
-      {
-        id: user._id,
-        userId: user.userId,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    // Set secure HTTP-only cookie
-    const cookieStore = await cookies();
-    cookieStore.set('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-      path: '/'
-    });
+    const token = createAuthToken(user);
+    await setAuthCookie(token);
 
     return NextResponse.json({
       success: true,
+      token,
       user: {
         _id: user._id.toString(),
         userId: user.userId,
