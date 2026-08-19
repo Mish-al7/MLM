@@ -44,6 +44,29 @@ export async function GET(req) {
       filter.status = status;
     }
 
+    if (currentUser.role !== 'super_admin') {
+      const links = await User.find({}).select('userId managerId').lean();
+      const childIds = new Map();
+      for (const member of links) {
+        if (!member.managerId) continue;
+        const siblings = childIds.get(member.managerId) || [];
+        siblings.push(member.userId);
+        childIds.set(member.managerId, siblings);
+      }
+      const subtree = new Set([currentUser.userId]);
+      const stack = [currentUser.userId];
+      while (stack.length > 0) {
+        const parentId = stack.pop();
+        for (const childId of childIds.get(parentId) || []) {
+          if (!subtree.has(childId)) {
+            subtree.add(childId);
+            stack.push(childId);
+          }
+        }
+      }
+      filter.userId = { $in: Array.from(subtree) };
+    }
+
     let members = await User.find(filter).lean();
 
     // Map manager names if available
